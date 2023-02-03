@@ -32,12 +32,14 @@
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
+    "bitcoin-address-generator": "^1.0.2",
     "body-parser": "^1.20.1",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^6.9.0",
     "nodemailer": "^6.9.1",
+    "random": "^4.1.0",
     "random-words": "^1.2.1"
   }
 }
