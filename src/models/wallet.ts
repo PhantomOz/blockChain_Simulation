@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { Coin } from "./coin";
 import randomWords from "random-words";
-
+// import HdAddGen from "hdaddressgenerator";
 //Create type of Wallet For TypeScript
 export type Wallet = {
   _id?: string;

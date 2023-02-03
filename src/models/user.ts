@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import Mailer from "../utils/mailer";
+import random from "random";
 
 //Creating type of User for TypeScript
 export type User = {
@@ -52,6 +54,15 @@ export default class UserStore {
       throw new Error(`Error occured ${err}`);
     }
   }
+  async sendCode(mail: string): Promise<void> {
+    try {
+      const rand = await random.int(100000, 999999);
+      const message = `<div style='background-color: green;'><h1>Verification</h1></div><p>Hello,</br> Here is your verification code ${rand}</p>`;
+      await Mailer(mail, message);
+    } catch (error) {
+      throw new Error(`Error occured ${error}`);
+    }
+  }
   async create(user: User): Promise<void> {
     try {
       const checkForUser = await UserModel.findOne({ email: user.email });
@@ -64,6 +75,7 @@ export default class UserStore {
         password: hash,
       });
       newUser.save();
+      this.sendCode(user.email);
     } catch (error) {
       throw new Error(`${error}`);
     }

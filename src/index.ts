@@ -1,9 +1,11 @@
 import express from "express";
 import dotenv from "dotenv";
 import connectDB from "./utils/database";
+// import Mailer from "./utils/mailer";
 
 //initiate application
 dotenv.config();
+// Mailer();
 connectDB();
 const app = express();
 const Port = process.env.PORT || 8080;
