@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import connectDB from "./utils/database";
 import user_routes from "./handlers/users";
 import walletRoutes from "./handlers/wallets";
+import coinRoutes from "./handlers/coins";
 
 //initiate application
 dotenv.config();
@@ -20,6 +21,8 @@ app.get("/", function (req: Request, res: Response) {
 });
 // user_routes(app);
 walletRoutes(app);
+coinRoutes(app);
+
 //Application Listener
 app.listen(Port, () => {
   console.log(`Server listening on http://localhost:${Port}/`);
