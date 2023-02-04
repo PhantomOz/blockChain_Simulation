@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import Mailer from "../utils/mailer";
-import random from "random";
 
 //Creating type of User for TypeScript
 export type User = {
@@ -59,7 +58,7 @@ export default class UserStore {
   //Sending Verification Code.
   async sendCode(mail: string): Promise<number> {
     try {
-      const rand = await random.int(100000, 999999);
+      const rand = Math.random() * (999999 - 100000) + 100000;
       const message = `<div style='background-color: green;'><h1>Verification</h1></div><p>Hello,</br> Here is your verification code ${rand}</p>`;
       await Mailer(mail, message);
       return rand;

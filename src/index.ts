@@ -20,7 +20,7 @@ app.use(express.urlencoded({ extended: false }));
 app.get("/", function (req: Request, res: Response) {
   res.send("Hello World!");
 });
-// user_routes(app);
+user_routes(app);
 walletRoutes(app);
 coinRoutes(app);
 transactionRoutes(app);
