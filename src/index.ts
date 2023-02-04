@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import connectDB from "./utils/database";
 import user_routes from "./handlers/users";
+import walletRoutes from "./handlers/wallets";
 
 //initiate application
 dotenv.config();
@@ -18,7 +19,7 @@ app.get("/", function (req: Request, res: Response) {
   res.send("Hello World!");
 });
 // user_routes(app);
-
+walletRoutes(app);
 //Application Listener
 app.listen(Port, () => {
   console.log(`Server listening on http://localhost:${Port}/`);
