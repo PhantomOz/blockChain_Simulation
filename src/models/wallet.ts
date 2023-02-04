@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { Coin } from "./coin";
-import randomWords from "random-words";
+import generateAddress from "../utils/genAddress";
 
 //Create type of Wallet For TypeScript
 export type Wallet = {
@@ -8,6 +8,8 @@ export type Wallet = {
   userId: string;
   type: string;
   privateKey: string;
+  pubKey: string;
+  address: string;
   phrase: string;
   activatedCoins: Coin[];
   createdAt?: Date;
@@ -17,6 +19,8 @@ export type Wallet = {
 const walletSchema = new mongoose.Schema({
   userId: String,
   privateKey: String,
+  pubKey: String,
+  address: String,
   phrase: String,
   type: String,
   activatedCoins: Array,
@@ -55,10 +59,22 @@ export default class WalletStore {
   }
 
   //Create Wallet for a User
-  async create(wallet: Wallet): Promise<void> {
+  async create(
+    userId: string,
+    activatedCoins: Coin[],
+    type: string
+  ): Promise<void> {
     try {
-      const phrases = await randomWords({ exactly: 12 });
-      phrases.join(" ");
+      const address = await generateAddress();
+      const newWallet = await WalletModel.create({
+        activatedCoins,
+        userId,
+        type,
+        phrase: address.mnemonic,
+        privateKey: address.privKey,
+        address: address.address,
+        pubKey: address.pubKey,
+      });
     } catch (error) {
       throw new Error(`${error}`);
     }
@@ -76,12 +92,12 @@ export default class WalletStore {
 
   //Credit Transaction
   async creditWallet(
-    walletId: string,
+    address: string,
     crypto: string,
     amount: number
   ): Promise<void> {
     try {
-      const getWallet = await WalletModel.findOne({ _id: walletId });
+      const getWallet = await WalletModel.findOne({ address: address });
       if (getWallet) {
         const Coin = await getWallet.activatedCoins.find(
           (coin) => coin.code === crypto
@@ -100,7 +116,7 @@ export default class WalletStore {
     amount: number
   ): Promise<void> {
     try {
-      const getWallet = await WalletModel.findOne({ _id: walletId });
+      const getWallet = await WalletModel.findOne({ address: walletId });
       if (getWallet) {
         const Coin = await getWallet.activatedCoins.find(
           (coin) => coin.code === crypto
