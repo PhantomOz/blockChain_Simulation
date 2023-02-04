@@ -4,6 +4,7 @@ import connectDB from "./utils/database";
 import user_routes from "./handlers/users";
 import walletRoutes from "./handlers/wallets";
 import coinRoutes from "./handlers/coins";
+import transactionRoutes from "./handlers/transactions";
 
 //initiate application
 dotenv.config();
@@ -22,6 +23,7 @@ app.get("/", function (req: Request, res: Response) {
 // user_routes(app);
 walletRoutes(app);
 coinRoutes(app);
+transactionRoutes(app);
 
 //Application Listener
 app.listen(Port, () => {
