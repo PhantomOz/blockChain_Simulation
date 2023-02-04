@@ -38,6 +38,7 @@ const { ROUND, BCRYPTKEY, SECRET_KEY } = process.env;
 
 //Creating Users Functions
 export default class UserStore {
+  //Getting All Users
   async index(): Promise<User[]> {
     try {
       const users: User[] = await UserModel.find(
@@ -54,16 +55,21 @@ export default class UserStore {
       throw new Error(`Error occured ${err}`);
     }
   }
-  async sendCode(mail: string): Promise<void> {
+
+  //Sending Verification Code.
+  async sendCode(mail: string): Promise<number> {
     try {
       const rand = await random.int(100000, 999999);
       const message = `<div style='background-color: green;'><h1>Verification</h1></div><p>Hello,</br> Here is your verification code ${rand}</p>`;
       await Mailer(mail, message);
+      return rand;
     } catch (error) {
       throw new Error(`Error occured ${error}`);
     }
   }
-  async create(user: User): Promise<void> {
+
+  //Creating A new User
+  async create(user: User): Promise<string> {
     try {
       const checkForUser = await UserModel.findOne({ email: user.email });
       if (checkForUser) {
@@ -75,11 +81,20 @@ export default class UserStore {
         password: hash,
       });
       newUser.save();
-      this.sendCode(user.email);
+      //authenticate user
+      const auth = {
+        id: newUser?._id,
+        username: newUser.username,
+        email: newUser.email,
+      };
+      const token = jwt.sign(auth, String(SECRET_KEY));
+      return token;
     } catch (error) {
       throw new Error(`${error}`);
     }
   }
+
+  // Logging In Users (Authentication)
   async authenticate(
     email: string,
     password: string
@@ -91,7 +106,7 @@ export default class UserStore {
       if (checkForUser) {
         if (bcrypt.compareSync(password + BCRYPTKEY, checkForUser?.password)) {
           const user = {
-            _id: checkForUser._id,
+            id: checkForUser._id,
             username: checkForUser?.username,
             email: checkForUser?.email,
           };
@@ -107,6 +122,8 @@ export default class UserStore {
       throw new Error(`${error}`);
     }
   }
+
+  //Creating User Transaction Pin
   async setUserPin(id: string, pin: string): Promise<void> {
     try {
       const checkForUser: User | null = await UserModel.findById(id);
@@ -120,6 +137,8 @@ export default class UserStore {
       throw new Error(`${error}`);
     }
   }
+
+  //Verifing User Email Address
   async verifyUser(id: string): Promise<void> {
     try {
       const checkForUser: User | null = await UserModel.findById(id);
@@ -132,6 +151,8 @@ export default class UserStore {
       throw new Error(`${error}`);
     }
   }
+
+  //Verify User Transaction Pin
   async verifyPin(id: string, pin: string): Promise<boolean | undefined> {
     try {
       const checkForUser: User | null = await UserModel.findById(id);
