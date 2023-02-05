@@ -1,0 +1,127 @@
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const mongoose_1 = __importDefault(require("mongoose"));
+const genAddress_1 = __importDefault(require("../utils/genAddress"));
+//Creating Wallet Schema & Model for DB
+const walletSchema = new mongoose_1.default.Schema({
+    userId: String,
+    privateKey: String,
+    pubKey: String,
+    address: String,
+    phrase: String,
+    type: String,
+    activatedCoins: Array,
+    createdAt: {
+        type: Date,
+        default: Date.now(),
+    },
+});
+const WalletModel = mongoose_1.default.model("wallet", walletSchema);
+//Creating Wallet Object
+class WalletStore {
+    //Get All Wallet
+    index() {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const getAllWallet = yield WalletModel.find({});
+                return getAllWallet;
+            }
+            catch (error) {
+                throw new Error(`${error}`);
+            }
+        });
+    }
+    //Get a Wallet By Id
+    show(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const getWallet = yield WalletModel.findById(id);
+                if (getWallet) {
+                    return getWallet;
+                }
+                else {
+                    throw new Error(`Wallet not found 404`);
+                }
+            }
+            catch (error) {
+                throw new Error(`${error}`);
+            }
+        });
+    }
+    //Create Wallet for a User
+    create(userId, activatedCoins, type) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const address = yield (0, genAddress_1.default)();
+                const newWallet = yield WalletModel.create({
+                    activatedCoins,
+                    userId,
+                    type,
+                    phrase: address.mnemonic,
+                    privateKey: address.privKey,
+                    address: address.address,
+                    pubKey: address.pubKey,
+                });
+                newWallet.save();
+            }
+            catch (error) {
+                throw new Error(`${error}`);
+            }
+        });
+    }
+    //Get All Wallets of a User
+    getUserWallets(userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const getWallets = yield WalletModel.find({ userId: userId });
+                return getWallets;
+            }
+            catch (error) {
+                throw new Error(`${error}`);
+            }
+        });
+    }
+    //Credit Transaction
+    creditWallet(address, crypto, amount) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const getWallet = yield WalletModel.findOne({ address: address });
+                if (getWallet) {
+                    const Coin = yield getWallet.activatedCoins.find((coin) => coin.code === crypto);
+                    Coin.amount += amount;
+                }
+            }
+            catch (error) {
+                throw new Error(`${error}`);
+            }
+        });
+    }
+    //Debit Transaction
+    debitWallet(walletId, crypto, amount) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const getWallet = yield WalletModel.findOne({ address: walletId });
+                if (getWallet) {
+                    const Coin = yield getWallet.activatedCoins.find((coin) => coin.code === crypto);
+                    Coin.amount -= amount;
+                }
+            }
+            catch (error) {
+                throw new Error(`${error}`);
+            }
+        });
+    }
+}
+exports.default = WalletStore;
