@@ -16,7 +16,11 @@ const index = async (req: Request, res: Response) => {
 
 const createWallet = async (req: Request, res: Response) => {
   try {
-    await walletStore.create(req.body);
+    await walletStore.create(
+      JSON.parse(req.user).id,
+      req.body.activatedCoins,
+      req.params.type
+    );
     res.status(201).json({ message: "success" });
   } catch (error) {
     res.status(400).json(error);

@@ -75,6 +75,7 @@ export default class WalletStore {
         address: address.address,
         pubKey: address.pubKey,
       });
+      newWallet.save();
     } catch (error) {
       throw new Error(`${error}`);
     }
