@@ -5,29 +5,70 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const cors_1 = __importDefault(require("cors"));
 const database_1 = __importDefault(require("./utils/database"));
-const users_1 = __importDefault(require("./handlers/users"));
-const wallets_1 = __importDefault(require("./handlers/wallets"));
-const coins_1 = __importDefault(require("./handlers/coins"));
-const transactions_1 = __importDefault(require("./handlers/transactions"));
-const genAddress_1 = __importDefault(require("./utils/genAddress"));
+const walletRoutes_1 = __importDefault(require("./routes/walletRoutes"));
+const coinRoute_1 = __importDefault(require("./routes/coinRoute"));
+const transactionRoutes_1 = __importDefault(require("./routes/transactionRoutes"));
+const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
+const swagger_jsdoc_1 = __importDefault(require("swagger-jsdoc"));
+const userRoute_1 = __importDefault(require("./routes/userRoute"));
 //initiate application
 dotenv_1.default.config();
 (0, database_1.default)();
 const app = (0, express_1.default)();
-const Port = process.env.PORT || 8080;
-(0, genAddress_1.default)();
+const Port = process.env.PORT || 4000;
+//Swagger UI definitions
+const options = {
+    definition: {
+        openapi: "3.0.1",
+        info: {
+            title: "Blockchain Simulation API",
+            version: "1.0.0",
+            description: "An Educational Project to show how the blockchain works.",
+        },
+        components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: "http",
+                    scheme: "bearer",
+                    bearerFormat: "JWT",
+                },
+            },
+        },
+        security: [
+            {
+                bearerAuth: [],
+            },
+        ],
+        schemes: ["http", "https"],
+        servers: [
+            {
+                url: "http://localhost:4000",
+            },
+            {
+                url: "https://blocksimul-backend.onrender.com",
+            },
+        ],
+    },
+    apis: [`${__dirname}/routes/*.ts`, "./build/routes/*.js"],
+};
+const specs = (0, swagger_jsdoc_1.default)(options);
 //middlewares
+app.use("/api-docs", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(specs));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));
+app.use((0, cors_1.default)({
+    origin: true,
+}));
 //Routes
-app.get("/", function (req, res) {
-    res.send("Hello World!");
-});
-(0, users_1.default)(app);
-(0, wallets_1.default)(app);
-(0, coins_1.default)(app);
-(0, transactions_1.default)(app);
+app.use("/users", userRoute_1.default);
+app.use("/wallet", walletRoutes_1.default);
+app.use("/api/transactions", transactionRoutes_1.default);
+app.use("/coins", coinRoute_1.default);
+// app.get("/", function (req: Request, res: Response) {
+//   res.send("Hello World!");
+// });
 //Application Listener
 app.listen(Port, () => {
     console.log(`Server listening on http://localhost:${Port}/`);

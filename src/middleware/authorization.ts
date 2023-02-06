@@ -9,13 +9,13 @@ declare global {
     }
   }
 }
-
+const { SECRET_KEY } = process.env;
 //Check if the user is logged In
 const isAuthorized = (req: Request, res: Response, next: NextFunction) => {
   try {
     const authorizationHeader = req.headers.authorization;
     const token = authorizationHeader?.split(" ")[1];
-    const user = jwt.verify(String(token), String(process.env.SECRET_KEY));
+    const user = jwt.verify(String(token), String(SECRET_KEY));
 
     req.user = JSON.stringify(user);
 

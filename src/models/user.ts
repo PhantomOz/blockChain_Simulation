@@ -40,15 +40,7 @@ export default class UserStore {
   //Getting All Users
   async index(): Promise<User[]> {
     try {
-      const users: User[] = await UserModel.find(
-        {},
-        (err: Error, user: User[]) => {
-          if (err) {
-            throw err;
-          }
-          return user;
-        }
-      );
+      const users: User[] = await UserModel.find({});
       return users;
     } catch (err) {
       throw new Error(`Error occured ${err}`);
@@ -125,10 +117,11 @@ export default class UserStore {
   //Creating User Transaction Pin
   async setUserPin(id: string, pin: string): Promise<void> {
     try {
-      const checkForUser: User | null = await UserModel.findById(id);
+      const checkForUser = await UserModel.findById(id);
       const hash = await bcrypt.hash(pin + BCRYPTKEY, Number(ROUND));
       if (checkForUser) {
         checkForUser.pin = hash;
+        checkForUser.save();
       } else {
         throw new Error("400");
       }
@@ -140,9 +133,10 @@ export default class UserStore {
   //Verifing User Email Address
   async verifyUser(id: string): Promise<void> {
     try {
-      const checkForUser: User | null = await UserModel.findById(id);
+      const checkForUser = await UserModel.findById(id);
       if (checkForUser) {
         checkForUser.isVerified = true;
+        checkForUser.save();
       } else {
         throw new Error("400");
       }

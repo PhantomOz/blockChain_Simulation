@@ -33,7 +33,7 @@ const create = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 const coinRoutes = (app) => {
-    app.get("/coins", index);
-    app.post("/coins", create);
+    app.get("/", index);
+    app.post("/", create);
 };
 exports.default = coinRoutes;

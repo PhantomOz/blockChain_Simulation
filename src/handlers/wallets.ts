@@ -1,6 +1,5 @@
-import { Application, Request, Response } from "express";
+import { Router, Request, Response } from "express";
 import WalletStore from "../models/wallet";
-import { read } from "fs";
 import isAuthorized from "../middleware/authorization";
 
 const walletStore = new WalletStore();
@@ -59,18 +58,18 @@ const trnxWallet = async (req: Request, res: Response) => {
       req.body.coin,
       req.body.amount
     );
-    res.status(200).send({ message: "Success" });
+    res.status(204).send({ message: "Success" });
   } catch (error) {
-    res.status(404).json(error);
+    res.status(400).json(error);
   }
 };
 
-const walletRoutes = (app: Application) => {
-  app.get("/wallet", index);
-  app.post("/wallet", isAuthorized, createWallet);
-  app.get("/wallet/user", isAuthorized, getUserWallets);
-  app.put("/wallet/trxn%20wallet/:type", isAuthorized, trnxWallet);
-  app.get("/wallet/:id", isAuthorized, showWallet);
+const walletRoutes = (app: Router) => {
+  app.get("/", index);
+  app.post("/", isAuthorized, createWallet);
+  app.get("/user", isAuthorized, getUserWallets);
+  app.put("/trxn%20wallet/:type", isAuthorized, trnxWallet);
+  app.get("/:id", isAuthorized, showWallet);
 };
 
 export default walletRoutes;

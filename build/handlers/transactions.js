@@ -42,8 +42,8 @@ const getWalletTransaction = (req, res) => __awaiter(void 0, void 0, void 0, fun
     }
 });
 const transactionRoutes = (app) => {
-    app.get("/api/transactions", index);
-    app.post("/api/transactions", createTransaction);
-    app.get("/api/transactions/:walletId", getWalletTransaction);
+    app.get("/", index);
+    app.post("/", createTransaction);
+    app.get("/:walletId", getWalletTransaction);
 };
 exports.default = transactionRoutes;

@@ -40,12 +40,7 @@ class UserStore {
     index() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const users = yield UserModel.find({}, (err, user) => {
-                    if (err) {
-                        throw err;
-                    }
-                    return user;
-                });
+                const users = yield UserModel.find({});
                 return users;
             }
             catch (err) {
@@ -130,6 +125,7 @@ class UserStore {
                 const hash = yield bcrypt_1.default.hash(pin + BCRYPTKEY, Number(ROUND));
                 if (checkForUser) {
                     checkForUser.pin = hash;
+                    checkForUser.save();
                 }
                 else {
                     throw new Error("400");
@@ -147,6 +143,7 @@ class UserStore {
                 const checkForUser = yield UserModel.findById(id);
                 if (checkForUser) {
                     checkForUser.isVerified = true;
+                    checkForUser.save();
                 }
                 else {
                     throw new Error("400");

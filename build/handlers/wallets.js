@@ -55,17 +55,17 @@ const trnxWallet = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     try {
         yield walletStore.creditWallet(req.body.receiver, req.body.coin, req.body.amount);
         yield walletStore.debitWallet(req.body.sender, req.body.coin, req.body.amount);
-        res.status(200).send({ message: "Success" });
+        res.status(204).send({ message: "Success" });
     }
     catch (error) {
-        res.status(404).json(error);
+        res.status(400).json(error);
     }
 });
 const walletRoutes = (app) => {
-    app.get("/wallet", index);
-    app.post("/wallet", authorization_1.default, createWallet);
-    app.get("/wallet/user", authorization_1.default, getUserWallets);
-    app.put("/wallet/trxn%20wallet/:type", authorization_1.default, trnxWallet);
-    app.get("/wallet/:id", authorization_1.default, showWallet);
+    app.get("/", index);
+    app.post("/", authorization_1.default, createWallet);
+    app.get("/user", authorization_1.default, getUserWallets);
+    app.put("/trxn%20wallet/:type", authorization_1.default, trnxWallet);
+    app.get("/:id", authorization_1.default, showWallet);
 };
 exports.default = walletRoutes;

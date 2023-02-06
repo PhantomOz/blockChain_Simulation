@@ -1,4 +1,4 @@
-import { Application, Request, Response } from "express";
+import { Request, Response, Router } from "express";
 import CoinStore from "../models/coin";
 
 const coinStore = new CoinStore();
@@ -21,9 +21,9 @@ const create = async (req: Request, res: Response) => {
   }
 };
 
-const coinRoutes = (app: Application) => {
-  app.get("/coins", index);
-  app.post("/coins", create);
+const coinRoutes = (app: Router) => {
+  app.get("/", index);
+  app.post("/", create);
 };
 
 export default coinRoutes;

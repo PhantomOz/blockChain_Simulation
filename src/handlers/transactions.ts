@@ -1,4 +1,4 @@
-import { Application, Request, Response } from "express";
+import { Request, Response, Router } from "express";
 import TransactionStore from "../models/transaction";
 
 const transactionStore = new TransactionStore();
@@ -32,10 +32,10 @@ const getWalletTransaction = async (req: Request, res: Response) => {
   }
 };
 
-const transactionRoutes = (app: Application) => {
-  app.get("/api/transactions", index);
-  app.post("/api/transactions", createTransaction);
-  app.get("/api/transactions/:walletId", getWalletTransaction);
+const transactionRoutes = (app: Router) => {
+  app.get("/", index);
+  app.post("/", createTransaction);
+  app.get("/:walletId", getWalletTransaction);
 };
 
 export default transactionRoutes;

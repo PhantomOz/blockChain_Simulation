@@ -1,4 +1,4 @@
-import { Request, Response, Application } from "express";
+import { Request, Response, Router } from "express";
 import UserStore from "../models/user";
 import isAuthorized from "../middleware/authorization";
 
@@ -16,7 +16,7 @@ const index = async (req: Request, res: Response) => {
 const sendCode = async (req: Request, res: Response) => {
   try {
     const sendCode = await userStore.sendCode(JSON.parse(req.user).email);
-    res.status(201).json({ code: sendCode });
+    res.status(200).json({ code: sendCode });
   } catch (error) {
     res.status(400).json(error);
   }
@@ -37,7 +37,7 @@ const authenticate = async (req: Request, res: Response) => {
       req.body.email,
       req.body.password
     );
-    res.status(201).json(token);
+    res.status(201).json({ token });
   } catch (error) {
     res.status(400).json(error);
   }
@@ -56,7 +56,7 @@ const setUserPin = async (req: Request, res: Response) => {
     await userStore.setUserPin(JSON.parse(req.user).id, req.body.pin);
     res.status(204).json({ message: "success" });
   } catch (error) {
-    res.status(404).json(error);
+    res.status(404).json({ error });
   }
 };
 const verifyPin = async (req: Request, res: Response) => {
@@ -64,18 +64,18 @@ const verifyPin = async (req: Request, res: Response) => {
     await userStore.verifyPin(JSON.parse(req.user).id, req.params.pin);
     res.status(200).json({ message: "success" });
   } catch (error) {
-    res.status(404).json(error);
+    res.status(400).json(error);
   }
 };
 
-const user_routes = (app: Application) => {
-  app.get("/users", index);
-  app.post("/users/send%20verification%20code", isAuthorized, sendCode);
-  app.post("/users/register", create);
-  app.post("/users/login", authenticate);
-  app.put("/users/setpin", isAuthorized, setUserPin);
-  app.put("/users/verify", isAuthorized, verifyUser);
-  app.get("/users/verify%20pin/:pin", isAuthorized, verifyPin);
+const user_routes = (app: Router) => {
+  app.get("/", index);
+  app.get("/send%20verification%20code", isAuthorized, sendCode);
+  app.post("/register", create);
+  app.post("/login", authenticate);
+  app.put("/setpin", isAuthorized, setUserPin);
+  app.put("/verify", isAuthorized, verifyUser);
+  app.get("/verify%20pin/:pin", isAuthorized, verifyPin);
 };
 
 export default user_routes;
