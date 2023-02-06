@@ -101,6 +101,7 @@ class WalletStore {
                 if (getWallet) {
                     const Coin = yield getWallet.activatedCoins.find((coin) => coin.code === crypto);
                     Coin.amount += amount;
+                    getWallet.save();
                 }
             }
             catch (error) {
@@ -116,6 +117,7 @@ class WalletStore {
                 if (getWallet) {
                     const Coin = yield getWallet.activatedCoins.find((coin) => coin.code === crypto);
                     Coin.amount -= amount;
+                    getWallet.save();
                 }
             }
             catch (error) {

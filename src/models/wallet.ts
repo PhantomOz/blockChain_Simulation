@@ -104,6 +104,7 @@ export default class WalletStore {
           (coin) => coin.code === crypto
         );
         Coin.amount += amount;
+        getWallet.save();
       }
     } catch (error) {
       throw new Error(`${error}`);
@@ -123,6 +124,7 @@ export default class WalletStore {
           (coin) => coin.code === crypto
         );
         Coin.amount -= amount;
+        getWallet.save();
       }
     } catch (error) {
       throw new Error(`${error}`);
