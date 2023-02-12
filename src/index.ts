@@ -8,6 +8,7 @@ import transactionRoutes from "./routes/transactionRoutes";
 import swaggerUI from "swagger-ui-express";
 import swaggerJsDoc from "swagger-jsdoc";
 import userRoutes from "./routes/userRoute";
+import bodyParser from "body-parser";
 //initiate application
 dotenv.config();
 connectDB();
@@ -55,6 +56,7 @@ const specs = swaggerJsDoc(options);
 //middlewares
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 app.use(express.json());
+app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(
   cors({
