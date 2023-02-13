@@ -3,10 +3,15 @@ import sgMail from "@sendgrid/mail";
 
 const Mailer = (email: string, message: string) => {
   const Transporter = nodemailer.createTransport({
-    service: "outlook",
+    host: "smtp.gmail.com",
+    port: 465,
     auth: {
+      type: "OAUTH2",
       user: process.env.EMAIL_ADDRESS,
       pass: process.env.EMAIL_PASSWORD,
+      clientId: process.env.CLIENT_ID,
+      clientSecret: process.env.CLIENT_SECRET,
+      refreshToken: process.env.REFRESH_TOKEN,
     },
   });
   const mailOptions = {

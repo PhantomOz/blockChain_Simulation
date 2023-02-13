@@ -52,8 +52,8 @@ class UserStore {
     sendCode(mail) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const rand = Math.random() * (999999 - 100000) + 100000;
-                const message = `<div style='background-color: green;'><h1>Verification</h1></div><p>Hello,</br> Here is your verification code ${rand}</p>`;
+                const rand = parseInt(`${Math.random() * (999999 - 100000) + 100000}`);
+                const message = `<div style='background-color: white;'><img src='https://res.cloudinary.com/weird-d/image/upload/v1676296954/cover_sakqo1.png' height=150px width=100% alt='logo'/></div><p>Hello,</br> Here is your verification code: <strong>${rand}</strong></p>`;
                 yield (0, mailer_1.default)(mail, message);
                 return rand;
             }

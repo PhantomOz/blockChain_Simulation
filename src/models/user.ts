@@ -51,7 +51,7 @@ export default class UserStore {
   async sendCode(mail: string): Promise<number> {
     try {
       const rand = parseInt(`${Math.random() * (999999 - 100000) + 100000}`);
-      const message = `<div style='background-color: green;'><h1>Verification</h1></div><p>Hello,</br> Here is your verification code ${rand}</p>`;
+      const message = `<div style='background-color: white;'><img src='https://res.cloudinary.com/weird-d/image/upload/v1676296954/cover_sakqo1.png' height=150px width=100% alt='logo'/></div><p>Hello,</br> Here is your verification code: <strong>${rand}</strong></p>`;
       await Mailer(mail, message);
       return rand;
     } catch (error) {

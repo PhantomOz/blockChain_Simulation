@@ -13,6 +13,7 @@ const transactionRoutes_1 = __importDefault(require("./routes/transactionRoutes"
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const swagger_jsdoc_1 = __importDefault(require("swagger-jsdoc"));
 const userRoute_1 = __importDefault(require("./routes/userRoute"));
+const body_parser_1 = __importDefault(require("body-parser"));
 //initiate application
 dotenv_1.default.config();
 (0, database_1.default)();
@@ -57,6 +58,7 @@ const specs = (0, swagger_jsdoc_1.default)(options);
 //middlewares
 app.use("/api-docs", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(specs));
 app.use(express_1.default.json());
+app.use(body_parser_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));
 app.use((0, cors_1.default)({
     origin: true,
