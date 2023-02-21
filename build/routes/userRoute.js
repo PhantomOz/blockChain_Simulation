@@ -85,9 +85,6 @@ const users_1 = __importDefault(require("../handlers/users"));
  *                              email:
  *                                  type: string
  *                                  example: david.joe@email.com
- *                              password:
- *                                  type: string
- *                                  example: ytre45^%
  *
  *          responses:
  *              201:
@@ -115,14 +112,12 @@ const users_1 = __importDefault(require("../handlers/users"));
  *              content:
  *                  application/json:
  *                      schema:
- *                          type: object
+ *                          type: string
  *                          properties:
  *                              email:
  *                                  type: string
  *                                  example: david.joe@email.com
- *                              password:
- *                                  type: string
- *                                  example: ytre45^%
+ *
  *
  *          responses:
  *              201:
@@ -140,11 +135,22 @@ const users_1 = __importDefault(require("../handlers/users"));
  *              500:
  *                  description: Internal server error
  * /users/send%20verification%20code:
- *      get:
+ *      post:
  *          summary: Send verification code
  *          tags:
  *              - User Endpoints
  *          description: Sends request to the server to send verification code
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: string
+ *                          properties:
+ *                              email:
+ *                                  type: string
+ *                                  example: david.joe@email.com
+ *
  *          responses:
  *              200:
  *                  description: Success

@@ -15,7 +15,7 @@ const index = async (req: Request, res: Response) => {
 
 const sendCode = async (req: Request, res: Response) => {
   try {
-    const sendCode = await userStore.sendCode(JSON.parse(req.user).email);
+    const sendCode = await userStore.sendCode(req.body.email);
     res.status(200).json({ code: sendCode });
   } catch (error) {
     res.status(400).json(error);
@@ -33,10 +33,7 @@ const create = async (req: Request, res: Response) => {
 
 const authenticate = async (req: Request, res: Response) => {
   try {
-    const token = await userStore.authenticate(
-      req.body.email,
-      req.body.password
-    );
+    const token = await userStore.authenticate(req.body.email);
     res.status(201).json({ token });
   } catch (error) {
     res.status(400).json(error);
@@ -70,7 +67,7 @@ const verifyPin = async (req: Request, res: Response) => {
 
 const user_routes = (app: Router) => {
   app.get("/", index);
-  app.get("/send%20verification%20code", isAuthorized, sendCode);
+  app.post("/send%20verification%20code", sendCode);
   app.post("/register", create);
   app.post("/login", authenticate);
   app.put("/setpin", isAuthorized, setUserPin);

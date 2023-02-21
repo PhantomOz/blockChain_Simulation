@@ -7,8 +7,10 @@ type Address = {
   pubKey: string;
   mnemonic: string;
 };
-const generateAddress = async (): Promise<Address> => {
-  const phrases = await randomWords({ exactly: 12 });
+const generateAddress = async (
+  mnePhrase: string[] = null
+): Promise<Address> => {
+  const phrases = mnePhrase || (await randomWords({ exactly: 12 }));
   const mnemonic = phrases.join(" ");
 
   const bip44 = await HdAddGen.withMnemonic(mnemonic, false, "BTC");

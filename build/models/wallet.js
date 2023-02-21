@@ -81,6 +81,59 @@ class WalletStore {
             }
         });
     }
+    //Importing Wallet
+    importWallet(phrase, type, userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const wallet = yield WalletModel.findOne({ phrase: phrase });
+                if (wallet) {
+                    wallet.userId = userId;
+                    wallet.save();
+                }
+                else {
+                    const activatedCoins = [
+                        {
+                            _id: "63e76100da1821d053c21432",
+                            coinName: "Bitcoin",
+                            code: "BTC",
+                            img: "https://s2.coinmarketcap.com/static/img/coins/64x64/1.png",
+                            amount: 0,
+                            __v: 0,
+                        },
+                    ];
+                    const address = yield (0, genAddress_1.default)(phrase);
+                    const newWallet = yield WalletModel.create({
+                        activatedCoins,
+                        userId,
+                        type,
+                        phrase: address.mnemonic,
+                        privateKey: address.privKey,
+                        address: address.address,
+                        pubKey: address.pubKey,
+                    });
+                    newWallet.save();
+                }
+            }
+            catch (error) {
+                throw new Error(`${error}`);
+            }
+        });
+    }
+    //Add ActivatedCoins
+    addCoinToWallet(walletId, coins) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const Wallet = yield WalletModel.findById(walletId);
+                if (Wallet) {
+                    Wallet.activatedCoins = [...Wallet.activatedCoins, ...coins];
+                    Wallet.save();
+                }
+            }
+            catch (error) {
+                throw new Error(`${error}`);
+            }
+        });
+    }
     //Get All Wallets of a User
     getUserWallets(userId) {
         return __awaiter(this, void 0, void 0, function* () {

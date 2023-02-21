@@ -33,6 +33,22 @@ const createWallet = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         res.status(400).json(error);
     }
 });
+const importWallet = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield walletStore.importWallet(req.body.phrase, req.body.type, JSON.parse(req.user).id);
+    }
+    catch (error) {
+        res.status(400).json(error);
+    }
+});
+const addToken = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield walletStore.addCoinToWallet(req.body.walletId, req.body.coins);
+    }
+    catch (error) {
+        res.status(400).json(error);
+    }
+});
 const getUserWallets = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userWallets = yield walletStore.getUserWallets(JSON.parse(req.user).id);
@@ -53,8 +69,8 @@ const showWallet = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 });
 const trnxWallet = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        yield walletStore.creditWallet(req.body.receiver, req.body.coin, req.body.amount);
         yield walletStore.debitWallet(req.body.sender, req.body.coin, req.body.amount);
+        yield walletStore.creditWallet(req.body.receiver, req.body.coin, req.body.amount);
         res.status(204).send({ message: "Success" });
     }
     catch (error) {
@@ -64,6 +80,8 @@ const trnxWallet = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 const walletRoutes = (app) => {
     app.get("/", index);
     app.post("/", authorization_1.default, createWallet);
+    app.post("/import", authorization_1.default, importWallet);
+    app.put("/addtoken", authorization_1.default, addToken);
     app.get("/user", authorization_1.default, getUserWallets);
     app.put("/trxn%20wallet/:type", authorization_1.default, trnxWallet);
     app.get("/:id", authorization_1.default, showWallet);

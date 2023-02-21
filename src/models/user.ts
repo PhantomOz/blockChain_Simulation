@@ -18,7 +18,6 @@ export type User = {
 const userSchema = new mongoose.Schema({
   username: String,
   email: String,
-  password: String,
   pin: { type: String, default: "" },
   isVerified: {
     type: Boolean,
@@ -51,7 +50,7 @@ export default class UserStore {
   async sendCode(mail: string): Promise<number> {
     try {
       const rand = parseInt(`${Math.random() * (999999 - 100000) + 100000}`);
-      const message = `<div style='background-color: white;'><img src='https://res.cloudinary.com/weird-d/image/upload/v1676296954/cover_sakqo1.png' height=150px width=100% alt='logo'/></div><p>Hello,</br> Here is your verification code: <strong>${rand}</strong></p>`;
+      const message = `<div style='background-color: white;'><img style='background-color: white;' src='https://res.cloudinary.com/weird-d/image/upload/v1676296954/cover_sakqo1.png' height=150px width=100% alt='logo'/></div><p>Hello,</br> Here is your verification code: <strong>${rand}</strong></p>`;
       await Mailer(mail, message);
       return rand;
     } catch (error) {
@@ -66,10 +65,9 @@ export default class UserStore {
       if (checkForUser) {
         throw new Error(`409`);
       }
-      const hash = bcrypt.hashSync(user.password + BCRYPTKEY, Number(ROUND));
+
       const newUser = await UserModel.create({
         ...user,
-        password: hash,
       });
       newUser.save();
       //authenticate user
@@ -86,26 +84,20 @@ export default class UserStore {
   }
 
   // Logging In Users (Authentication)
-  async authenticate(
-    email: string,
-    password: string
-  ): Promise<string | undefined> {
+  async authenticate(email: string): Promise<string | undefined> {
     try {
       const checkForUser: User | null = await UserModel.findOne({
         email: email,
       });
       if (checkForUser) {
-        if (bcrypt.compareSync(password + BCRYPTKEY, checkForUser?.password)) {
-          const user = {
-            id: checkForUser._id,
-            username: checkForUser?.username,
-            email: checkForUser?.email,
-          };
-          const token = jwt.sign(user, String(SECRET_KEY));
-          return token;
-        } else {
-          throw new Error("400");
-        }
+        const user = {
+          id: checkForUser._id,
+          username: checkForUser?.username,
+          email: checkForUser?.email,
+        };
+
+        const token = jwt.sign(user, String(SECRET_KEY));
+        return token;
       } else {
         throw new Error("404");
       }

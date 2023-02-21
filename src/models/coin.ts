@@ -14,7 +14,10 @@ const coinSchema = new mongoose.Schema({
   coinName: String,
   code: String,
   img: String,
-  amount: Number,
+  amount: {
+    type: Number,
+    default: 0,
+  },
 });
 
 const CoinModel = mongoose.model("coin", coinSchema);

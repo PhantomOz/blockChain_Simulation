@@ -20,7 +20,6 @@ const mailer_1 = __importDefault(require("../utils/mailer"));
 const userSchema = new mongoose_1.default.Schema({
     username: String,
     email: String,
-    password: String,
     pin: { type: String, default: "" },
     isVerified: {
         type: Boolean,
@@ -53,7 +52,7 @@ class UserStore {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const rand = parseInt(`${Math.random() * (999999 - 100000) + 100000}`);
-                const message = `<div style='background-color: white;'><img src='https://res.cloudinary.com/weird-d/image/upload/v1676296954/cover_sakqo1.png' height=150px width=100% alt='logo'/></div><p>Hello,</br> Here is your verification code: <strong>${rand}</strong></p>`;
+                const message = `<div style='background-color: white;'><img style='background-color: white;' src='https://res.cloudinary.com/weird-d/image/upload/v1676296954/cover_sakqo1.png' height=150px width=100% alt='logo'/></div><p>Hello,</br> Here is your verification code: <strong>${rand}</strong></p>`;
                 yield (0, mailer_1.default)(mail, message);
                 return rand;
             }
@@ -70,8 +69,7 @@ class UserStore {
                 if (checkForUser) {
                     throw new Error(`409`);
                 }
-                const hash = bcrypt_1.default.hashSync(user.password + BCRYPTKEY, Number(ROUND));
-                const newUser = yield UserModel.create(Object.assign(Object.assign({}, user), { password: hash }));
+                const newUser = yield UserModel.create(Object.assign({}, user));
                 newUser.save();
                 //authenticate user
                 const auth = {
@@ -88,25 +86,20 @@ class UserStore {
         });
     }
     // Logging In Users (Authentication)
-    authenticate(email, password) {
+    authenticate(email) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const checkForUser = yield UserModel.findOne({
                     email: email,
                 });
                 if (checkForUser) {
-                    if (bcrypt_1.default.compareSync(password + BCRYPTKEY, checkForUser === null || checkForUser === void 0 ? void 0 : checkForUser.password)) {
-                        const user = {
-                            id: checkForUser._id,
-                            username: checkForUser === null || checkForUser === void 0 ? void 0 : checkForUser.username,
-                            email: checkForUser === null || checkForUser === void 0 ? void 0 : checkForUser.email,
-                        };
-                        const token = jsonwebtoken_1.default.sign(user, String(SECRET_KEY));
-                        return token;
-                    }
-                    else {
-                        throw new Error("400");
-                    }
+                    const user = {
+                        id: checkForUser._id,
+                        username: checkForUser === null || checkForUser === void 0 ? void 0 : checkForUser.username,
+                        email: checkForUser === null || checkForUser === void 0 ? void 0 : checkForUser.email,
+                    };
+                    const token = jsonwebtoken_1.default.sign(user, String(SECRET_KEY));
+                    return token;
                 }
                 else {
                     throw new Error("404");

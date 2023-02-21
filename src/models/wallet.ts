@@ -81,6 +81,58 @@ export default class WalletStore {
     }
   }
 
+  //Importing Wallet
+  async importWallet(
+    phrase: string[],
+    type: string,
+    userId: string
+  ): Promise<void> {
+    try {
+      const wallet = await WalletModel.findOne({ phrase: phrase });
+      if (wallet) {
+        wallet.userId = userId;
+        wallet.save();
+      } else {
+        const activatedCoins = [
+          {
+            _id: "63e76100da1821d053c21432",
+            coinName: "Bitcoin",
+            code: "BTC",
+            img: "https://s2.coinmarketcap.com/static/img/coins/64x64/1.png",
+            amount: 0,
+            __v: 0,
+          },
+        ];
+        const address = await generateAddress(phrase);
+        const newWallet = await WalletModel.create({
+          activatedCoins,
+          userId,
+          type,
+          phrase: address.mnemonic,
+          privateKey: address.privKey,
+          address: address.address,
+          pubKey: address.pubKey,
+        });
+        newWallet.save();
+      }
+    } catch (error) {
+      throw new Error(`${error}`);
+    }
+  }
+
+  //Add ActivatedCoins
+  async addCoinToWallet(walletId: string, coins: Coin[]): Promise<void> {
+    try {
+      const Wallet = await WalletModel.findById(walletId);
+      if (Wallet) {
+        Wallet.activatedCoins = [...Wallet.activatedCoins, ...coins];
+        Wallet.save();
+      }
+    } catch (error) {
+      throw new Error(`${error}`);
+    }
+  }
+
   //Get All Wallets of a User
   async getUserWallets(userId: string): Promise<Wallet[]> {
     try {

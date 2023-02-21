@@ -26,7 +26,7 @@ const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 const sendCode = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const sendCode = yield userStore.sendCode(JSON.parse(req.user).email);
+        const sendCode = yield userStore.sendCode(req.body.email);
         res.status(200).json({ code: sendCode });
     }
     catch (error) {
@@ -44,7 +44,7 @@ const create = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 const authenticate = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const token = yield userStore.authenticate(req.body.email, req.body.password);
+        const token = yield userStore.authenticate(req.body.email);
         res.status(201).json({ token });
     }
     catch (error) {
@@ -80,7 +80,7 @@ const verifyPin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 const user_routes = (app) => {
     app.get("/", index);
-    app.get("/send%20verification%20code", authorization_1.default, sendCode);
+    app.post("/send%20verification%20code", sendCode);
     app.post("/register", create);
     app.post("/login", authenticate);
     app.put("/setpin", authorization_1.default, setUserPin);

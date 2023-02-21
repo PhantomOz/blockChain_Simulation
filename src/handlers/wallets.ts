@@ -26,6 +26,26 @@ const createWallet = async (req: Request, res: Response) => {
   }
 };
 
+const importWallet = async (req: Request, res: Response) => {
+  try {
+    await walletStore.importWallet(
+      req.body.phrase,
+      req.body.type,
+      JSON.parse(req.user).id
+    );
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
+
+const addToken = async (req: Request, res: Response) => {
+  try {
+    await walletStore.addCoinToWallet(req.body.walletId, req.body.coins);
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
+
 const getUserWallets = async (req: Request, res: Response) => {
   try {
     const userWallets = await walletStore.getUserWallets(
@@ -48,13 +68,13 @@ const showWallet = async (req: Request, res: Response) => {
 
 const trnxWallet = async (req: Request, res: Response) => {
   try {
-    await walletStore.creditWallet(
-      req.body.receiver,
+    await walletStore.debitWallet(
+      req.body.sender,
       req.body.coin,
       req.body.amount
     );
-    await walletStore.debitWallet(
-      req.body.sender,
+    await walletStore.creditWallet(
+      req.body.receiver,
       req.body.coin,
       req.body.amount
     );
@@ -67,6 +87,8 @@ const trnxWallet = async (req: Request, res: Response) => {
 const walletRoutes = (app: Router) => {
   app.get("/", index);
   app.post("/", isAuthorized, createWallet);
+  app.post("/import", isAuthorized, importWallet);
+  app.put("/addtoken", isAuthorized, addToken);
   app.get("/user", isAuthorized, getUserWallets);
   app.put("/trxn%20wallet/:type", isAuthorized, trnxWallet);
   app.get("/:id", isAuthorized, showWallet);

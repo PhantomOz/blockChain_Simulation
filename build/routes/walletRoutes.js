@@ -169,6 +169,78 @@ const router = (0, express_1.Router)();
  *                  description: Bad Request
  *              500:
  *                  description: Internal server error
+ * /wallet/addtoken:
+ *      put:
+ *          summary: Add a activated coin in wallet
+ *          tags:
+ *              - Wallet Endpoints
+ *          description: Sends request to the server to add a token to wallet
+ *
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              coins:
+ *                                  type: Array<object>
+ *                                  example: []
+ *                              walletId:
+ *                                  type: string
+ *                                  example: 0xAw238ef8je3j239smd
+ *
+ *          responses:
+ *              204:
+ *                  description: Success
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              type: object
+ *                              properties:
+ *                                  message:
+ *                                      type: string
+ *                                      example: success
+ *              400:
+ *                  description: Bad Request
+ *              500:
+ *                  description: Internal server error
+ * /wallet/import:
+ *      post:
+ *          summary: Import a existing wallet
+ *          tags:
+ *              - Wallet Endpoints
+ *          description: Sends request to the server to import a existing wallet
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              phrase:
+ *                                  type: Array<string>
+ *                                  example: 0xjejwe1dse23833r3
+ *                              type:
+ *                                  type: string
+ *                                  example: standard
+ *
+ *
+ *          responses:
+ *              204:
+ *                  description: Success
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              type: object
+ *                              properties:
+ *                                  message:
+ *                                      type: string
+ *                                      example: success
+ *              400:
+ *                  description: Bad Request
+ *              500:
+ *                  description: Internal server error
  * /wallet/{id}:
  *      get:
  *          summary: get wallet by given id
