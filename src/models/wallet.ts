@@ -88,7 +88,7 @@ export default class WalletStore {
     userId: string
   ): Promise<void> {
     try {
-      const wallet = await WalletModel.findOne({ phrase: phrase });
+      const wallet = await WalletModel.findOne({ phrase: phrase.join(" ") });
       if (wallet) {
         wallet.userId = userId;
         wallet.save();

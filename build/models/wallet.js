@@ -85,7 +85,7 @@ class WalletStore {
     importWallet(phrase, type, userId) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const wallet = yield WalletModel.findOne({ phrase: phrase });
+                const wallet = yield WalletModel.findOne({ phrase: phrase.join(" ") });
                 if (wallet) {
                     wallet.userId = userId;
                     wallet.save();
