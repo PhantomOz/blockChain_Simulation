@@ -36,7 +36,7 @@ const createWallet = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 const importWallet = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield walletStore.importWallet(req.body.phrase, req.body.type, JSON.parse(req.user).id);
-        res.status(201).json({ message: 'success' });
+        res.status(201).json({ message: "success" });
     }
     catch (error) {
         res.status(400).json(error);
@@ -45,7 +45,7 @@ const importWallet = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 const addToken = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield walletStore.addCoinToWallet(req.body.walletId, req.body.coins);
-        res.status(204).json({ message: 'success' });
+        res.status(204).json({ message: "success" });
     }
     catch (error) {
         res.status(400).json(error);
@@ -73,7 +73,7 @@ const trnxWallet = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     try {
         yield walletStore.debitWallet(req.body.sender, req.body.coin, req.body.amount);
         yield walletStore.creditWallet(req.body.receiver, req.body.coin, req.body.amount);
-        res.status(204).send({ message: "Success" });
+        res.status(204).json({ message: "Success" });
     }
     catch (error) {
         res.status(400).json(error);

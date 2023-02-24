@@ -150,14 +150,20 @@ export default class WalletStore {
     amount: number
   ): Promise<void> {
     try {
-      const getWallet = await WalletModel.findOne({ address: address });
+      let getWallet = await WalletModel.findOne({ address: address });
       if (getWallet) {
         const Coin = await getWallet.activatedCoins.find(
           (coin) => coin.code === crypto
         );
         Coin.amount += amount;
+        console.log(getWallet, Coin);
+        await WalletModel.updateOne(
+          { address },
+          {
+            activatedCoins: getWallet.activatedCoins,
+          }
+        );
       }
-      getWallet.save();
     } catch (error) {
       throw new Error(`${error}`);
     }
@@ -175,8 +181,13 @@ export default class WalletStore {
         const Coin = await getWallet.activatedCoins.find(
           (coin) => coin.code === crypto
         );
-        Coin.amount = Coin.amount - amount;
-        getWallet.save();
+        Coin.amount -= amount;
+        await WalletModel.updateOne(
+          { address: walletId },
+          {
+            activatedCoins: getWallet.activatedCoins,
+          }
+        );
       }
     } catch (error) {
       throw new Error(`${error}`);

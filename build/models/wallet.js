@@ -150,12 +150,15 @@ class WalletStore {
     creditWallet(address, crypto, amount) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const getWallet = yield WalletModel.findOne({ address: address });
+                let getWallet = yield WalletModel.findOne({ address: address });
                 if (getWallet) {
                     const Coin = yield getWallet.activatedCoins.find((coin) => coin.code === crypto);
                     Coin.amount += amount;
+                    console.log(getWallet, Coin);
+                    yield WalletModel.updateOne({ address }, {
+                        activatedCoins: getWallet.activatedCoins,
+                    });
                 }
-                getWallet.save();
             }
             catch (error) {
                 throw new Error(`${error}`);
@@ -169,8 +172,10 @@ class WalletStore {
                 const getWallet = yield WalletModel.findOne({ address: walletId });
                 if (getWallet) {
                     const Coin = yield getWallet.activatedCoins.find((coin) => coin.code === crypto);
-                    Coin.amount = Coin.amount - amount;
-                    getWallet.save();
+                    Coin.amount -= amount;
+                    yield WalletModel.updateOne({ address: walletId }, {
+                        activatedCoins: getWallet.activatedCoins,
+                    });
                 }
             }
             catch (error) {

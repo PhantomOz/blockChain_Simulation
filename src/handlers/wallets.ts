@@ -33,7 +33,7 @@ const importWallet = async (req: Request, res: Response) => {
       req.body.type,
       JSON.parse(req.user).id
     );
-    res.status(201).json({message: 'success'});
+    res.status(201).json({ message: "success" });
   } catch (error) {
     res.status(400).json(error);
   }
@@ -42,7 +42,7 @@ const importWallet = async (req: Request, res: Response) => {
 const addToken = async (req: Request, res: Response) => {
   try {
     await walletStore.addCoinToWallet(req.body.walletId, req.body.coins);
-    res.status(204).json({message: 'success'});
+    res.status(204).json({ message: "success" });
   } catch (error) {
     res.status(400).json(error);
   }
@@ -80,7 +80,7 @@ const trnxWallet = async (req: Request, res: Response) => {
       req.body.coin,
       req.body.amount
     );
-    res.status(204).send({ message: "Success" });
+    res.status(204).json({ message: "Success" });
   } catch (error) {
     res.status(400).json(error);
   }
