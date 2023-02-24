@@ -175,9 +175,9 @@ export default class WalletStore {
         const Coin = await getWallet.activatedCoins.find(
           (coin) => coin.code === crypto
         );
-        Coin.amount -= amount;
+        Coin.amount = Coin.amount - amount;
+        getWallet.save();
       }
-      getWallet.save();
     } catch (error) {
       throw new Error(`${error}`);
     }

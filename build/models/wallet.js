@@ -169,9 +169,9 @@ class WalletStore {
                 const getWallet = yield WalletModel.findOne({ address: walletId });
                 if (getWallet) {
                     const Coin = yield getWallet.activatedCoins.find((coin) => coin.code === crypto);
-                    Coin.amount -= amount;
+                    Coin.amount = Coin.amount - amount;
+                    getWallet.save();
                 }
-                getWallet.save();
             }
             catch (error) {
                 throw new Error(`${error}`);
