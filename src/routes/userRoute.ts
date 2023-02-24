@@ -142,7 +142,7 @@ import user_routes from "../handlers/users";
  *              content:
  *                  application/json:
  *                      schema:
- *                          type: string
+ *                          type: object
  *                          properties:
  *                              email:
  *                                  type: string

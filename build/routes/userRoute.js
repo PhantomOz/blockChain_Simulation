@@ -145,7 +145,7 @@ const users_1 = __importDefault(require("../handlers/users"));
  *              content:
  *                  application/json:
  *                      schema:
- *                          type: string
+ *                          type: object
  *                          properties:
  *                              email:
  *                                  type: string

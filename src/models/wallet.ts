@@ -126,8 +126,8 @@ export default class WalletStore {
       const Wallet = await WalletModel.findById(walletId);
       if (Wallet) {
         Wallet.activatedCoins = [...Wallet.activatedCoins, ...coins];
-        Wallet.save();
       }
+      Wallet.save();
     } catch (error) {
       throw new Error(`${error}`);
     }
@@ -156,8 +156,8 @@ export default class WalletStore {
           (coin) => coin.code === crypto
         );
         Coin.amount += amount;
-        getWallet.save();
       }
+      getWallet.save();
     } catch (error) {
       throw new Error(`${error}`);
     }
@@ -176,8 +176,8 @@ export default class WalletStore {
           (coin) => coin.code === crypto
         );
         Coin.amount -= amount;
-        getWallet.save();
       }
+      getWallet.save();
     } catch (error) {
       throw new Error(`${error}`);
     }

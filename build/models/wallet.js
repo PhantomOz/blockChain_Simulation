@@ -126,8 +126,8 @@ class WalletStore {
                 const Wallet = yield WalletModel.findById(walletId);
                 if (Wallet) {
                     Wallet.activatedCoins = [...Wallet.activatedCoins, ...coins];
-                    Wallet.save();
                 }
+                Wallet.save();
             }
             catch (error) {
                 throw new Error(`${error}`);
@@ -154,8 +154,8 @@ class WalletStore {
                 if (getWallet) {
                     const Coin = yield getWallet.activatedCoins.find((coin) => coin.code === crypto);
                     Coin.amount += amount;
-                    getWallet.save();
                 }
+                getWallet.save();
             }
             catch (error) {
                 throw new Error(`${error}`);
@@ -170,8 +170,8 @@ class WalletStore {
                 if (getWallet) {
                     const Coin = yield getWallet.activatedCoins.find((coin) => coin.code === crypto);
                     Coin.amount -= amount;
-                    getWallet.save();
                 }
+                getWallet.save();
             }
             catch (error) {
                 throw new Error(`${error}`);
