@@ -155,7 +155,7 @@ export default class WalletStore {
         const Coin = await getWallet.activatedCoins.find(
           (coin) => coin.code === crypto
         );
-        Coin.amount += amount;
+        Coin.amount = Number(amount) + Number(Coin.amount);
         console.log(getWallet, Coin);
         await WalletModel.updateOne(
           { address },
