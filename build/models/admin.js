@@ -25,7 +25,7 @@ const adminSchema = new mongoose_1.default.Schema({
         default: Date.now(),
     },
 });
-const AdminModel = mongoose_1.default.model("user", adminSchema);
+const AdminModel = mongoose_1.default.model("admin", adminSchema);
 //Get Round and Keys
 const { ROUND, BCRYPTKEY, SECRET_KEY } = process.env;
 class AdminStore {

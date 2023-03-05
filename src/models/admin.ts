@@ -23,7 +23,7 @@ const adminSchema = new mongoose.Schema({
   },
 });
 
-const AdminModel = mongoose.model("user", adminSchema);
+const AdminModel = mongoose.model("admin", adminSchema);
 
 //Get Round and Keys
 const { ROUND, BCRYPTKEY, SECRET_KEY } = process.env;
