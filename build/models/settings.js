@@ -23,7 +23,7 @@ const settingSchema = new mongoose_1.default.Schema({
         default: 0.02,
     },
 });
-const settingModel = new mongoose_1.default.Model("setting", settingSchema);
+const settingModel = mongoose_1.default.model("setting", settingSchema);
 class SettingStore {
     setFees(fees) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -42,7 +42,7 @@ class SettingStore {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const set = yield settingModel.find({});
-                return set[0];
+                return set;
             }
             catch (error) {
                 throw new Error(`${error}`);

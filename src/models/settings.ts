@@ -17,7 +17,7 @@ const settingSchema = new mongoose.Schema({
   },
 });
 
-const settingModel = new mongoose.Model("setting", settingSchema);
+const settingModel = mongoose.model("setting", settingSchema);
 
 export default class SettingStore {
   async setFees(fees: Settings): Promise<void> {
@@ -31,10 +31,10 @@ export default class SettingStore {
     }
   }
 
-  async index(): Promise<Settings> {
+  async index(): Promise<Settings[]> {
     try {
-      const set = await settingModel.find({});
-      return set[0];
+      const set: Settings[] = await settingModel.find({});
+      return set;
     } catch (error) {
       throw new Error(`${error}`);
     }
