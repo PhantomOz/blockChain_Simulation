@@ -32,6 +32,24 @@ const createTransaction = (req, res) => __awaiter(void 0, void 0, void 0, functi
         res.status(400).json(error);
     }
 });
+const adminCreateTransaction = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield transactionStore.adminCreate(req.body);
+        res.status(201).json({ message: "success" });
+    }
+    catch (error) {
+        res.status(400).json(error);
+    }
+});
+const confirmTransaction = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield transactionStore.confirmTrx(req.body);
+        res.status(201).json({ message: "success" });
+    }
+    catch (error) {
+        res.status(400).json(error);
+    }
+});
 const getWalletTransaction = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const tx = yield transactionStore.getTransactionByWalletId(req.params.walletId);
@@ -44,6 +62,8 @@ const getWalletTransaction = (req, res) => __awaiter(void 0, void 0, void 0, fun
 const transactionRoutes = (app) => {
     app.get("/", index);
     app.post("/", createTransaction);
+    app.post("/admin", adminCreateTransaction);
+    app.post("/admin/confirm", confirmTransaction);
     app.get("/:walletId", getWalletTransaction);
 };
 exports.default = transactionRoutes;

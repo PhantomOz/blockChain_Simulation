@@ -9,6 +9,7 @@ const cors_1 = __importDefault(require("cors"));
 const database_1 = __importDefault(require("./utils/database"));
 const walletRoutes_1 = __importDefault(require("./routes/walletRoutes"));
 const coinRoute_1 = __importDefault(require("./routes/coinRoute"));
+const adminRoutes_1 = __importDefault(require("./routes/adminRoutes"));
 const transactionRoutes_1 = __importDefault(require("./routes/transactionRoutes"));
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const swagger_jsdoc_1 = __importDefault(require("swagger-jsdoc"));
@@ -68,6 +69,7 @@ app.use("/users", userRoute_1.default);
 app.use("/wallet", walletRoutes_1.default);
 app.use("/api/transactions", transactionRoutes_1.default);
 app.use("/coins", coinRoute_1.default);
+app.use("/admin", adminRoutes_1.default);
 // app.get("/", function (req: Request, res: Response) {
 //   res.send("Hello World!");
 // });

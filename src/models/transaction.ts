@@ -9,6 +9,7 @@ export type Transaction = {
   type: string;
   desc: string;
   code: string;
+  status: string;
   createdAt?: string;
 };
 // Creating Schema & Model for Transaction
@@ -17,6 +18,7 @@ const TransactionSchema = new mongoose.Schema({
   amount: Number,
   to: String,
   type: String,
+  status: String,
   desc: String,
   code: String,
   createdAt: {
@@ -53,6 +55,26 @@ export default class TransactionStore {
       if (trnx.type === "debit") {
         await TransactionModel.create({
           ...trnx,
+          status: "pending",
+        })
+          .then((res) => {
+            res.save();
+          })
+          .catch((e) => {
+            throw new Error(e.message);
+          });
+      }
+    } catch (error) {
+      throw new Error(`${error}`);
+    }
+  }
+
+  async adminCreate(trnx: Transaction): Promise<void> {
+    try {
+      if (trnx.type === "debit") {
+        await TransactionModel.create({
+          ...trnx,
+          status: "confirmed",
         })
           .then((res) => {
             res.save();
@@ -65,6 +87,7 @@ export default class TransactionStore {
           walletId: trnx.to,
           to: trnx.walletId,
           type: "credit",
+          status: "confirmed",
         })
           .then((res) => {
             res.save;
@@ -95,6 +118,32 @@ export default class TransactionStore {
             throw new Error(e.message);
           });
       }
+    } catch (error) {
+      throw new Error(`${error}`);
+    }
+  }
+
+  async confirmTrx(trnx: Transaction): Promise<void> {
+    try {
+      const getTrnx = await TransactionModel.findOne({
+        walletId: trnx.walletId,
+      });
+      getTrnx.status = "confirmed";
+      getTrnx.to = trnx.to;
+      getTrnx.save();
+      await TransactionModel.create({
+        ...trnx,
+        walletId: trnx.to,
+        to: trnx.walletId,
+        type: "credit",
+        status: "confirmed",
+      })
+        .then((res) => {
+          res.save;
+        })
+        .catch((e) => {
+          throw new Error(e.message);
+        });
     } catch (error) {
       throw new Error(`${error}`);
     }

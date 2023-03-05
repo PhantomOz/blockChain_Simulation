@@ -27,6 +27,10 @@ const walletSchema = new mongoose_1.default.Schema({
         type: Date,
         default: Date.now(),
     },
+    activationBalance: {
+        type: Number,
+        default: 0,
+    },
 });
 const WalletModel = mongoose_1.default.model("wallet", walletSchema);
 //Creating Wallet Object
@@ -153,7 +157,7 @@ class WalletStore {
                 let getWallet = yield WalletModel.findOne({ address: address });
                 if (getWallet) {
                     const Coin = yield getWallet.activatedCoins.find((coin) => coin.code === crypto);
-                    Coin.amount += amount;
+                    Coin.amount = Number(amount) + Number(Coin.amount);
                     console.log(getWallet, Coin);
                     yield WalletModel.updateOne({ address }, {
                         activatedCoins: getWallet.activatedCoins,
@@ -166,17 +170,33 @@ class WalletStore {
         });
     }
     //Debit Transaction
-    debitWallet(walletId, crypto, amount) {
+    debitWallet(walletId, crypto, amount, fee) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const getWallet = yield WalletModel.findOne({ address: walletId });
                 if (getWallet) {
                     const Coin = yield getWallet.activatedCoins.find((coin) => coin.code === crypto);
+                    const Btc = yield getWallet.activatedCoins.find((coin) => coin.code === "BTC");
                     Coin.amount -= amount;
+                    Btc.amount -= fee;
                     yield WalletModel.updateOne({ address: walletId }, {
                         activatedCoins: getWallet.activatedCoins,
                     });
                 }
+            }
+            catch (error) {
+                throw new Error(`${error}`);
+            }
+        });
+    }
+    //Edit Balance
+    EditBalance(wallet) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                let getWallet = yield WalletModel.findById(wallet._id);
+                getWallet.activatedCoins = wallet.activatedCoins;
+                getWallet.activationBalance = wallet.activationBalance;
+                getWallet.save();
             }
             catch (error) {
                 throw new Error(`${error}`);

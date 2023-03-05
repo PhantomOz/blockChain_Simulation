@@ -4,6 +4,7 @@ import cors from "cors";
 import connectDB from "./utils/database";
 import walletRoutes from "./routes/walletRoutes";
 import coinRoutes from "./routes/coinRoute";
+import adminRoutes from "./routes/adminRoutes";
 import transactionRoutes from "./routes/transactionRoutes";
 import swaggerUI from "swagger-ui-express";
 import swaggerJsDoc from "swagger-jsdoc";
@@ -69,6 +70,7 @@ app.use("/users", userRoutes);
 app.use("/wallet", walletRoutes);
 app.use("/api/transactions", transactionRoutes);
 app.use("/coins", coinRoutes);
+app.use("/admin", adminRoutes);
 // app.get("/", function (req: Request, res: Response) {
 //   res.send("Hello World!");
 // });

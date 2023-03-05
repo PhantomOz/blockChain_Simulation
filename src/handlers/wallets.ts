@@ -4,6 +4,7 @@ import isAuthorized from "../middleware/authorization";
 
 const walletStore = new WalletStore();
 
+//get all wallets
 const index = async (req: Request, res: Response) => {
   try {
     const wallet = await walletStore.index();
@@ -13,6 +14,7 @@ const index = async (req: Request, res: Response) => {
   }
 };
 
+//Create a new wallet
 const createWallet = async (req: Request, res: Response) => {
   try {
     await walletStore.create(
@@ -26,6 +28,7 @@ const createWallet = async (req: Request, res: Response) => {
   }
 };
 
+//Create/importing Wallet from backup phrase
 const importWallet = async (req: Request, res: Response) => {
   try {
     await walletStore.importWallet(
@@ -39,6 +42,7 @@ const importWallet = async (req: Request, res: Response) => {
   }
 };
 
+//add a coin to activated coins
 const addToken = async (req: Request, res: Response) => {
   try {
     await walletStore.addCoinToWallet(req.body.walletId, req.body.coins);
@@ -48,6 +52,7 @@ const addToken = async (req: Request, res: Response) => {
   }
 };
 
+//get a particular user wallet
 const getUserWallets = async (req: Request, res: Response) => {
   try {
     const userWallets = await walletStore.getUserWallets(
@@ -59,6 +64,7 @@ const getUserWallets = async (req: Request, res: Response) => {
   }
 };
 
+//get a particular wallet
 const showWallet = async (req: Request, res: Response) => {
   try {
     const wallet = await walletStore.show(req.params.id);
@@ -68,12 +74,29 @@ const showWallet = async (req: Request, res: Response) => {
   }
 };
 
+//perform a transaction on wallet
 const trnxWallet = async (req: Request, res: Response) => {
   try {
     await walletStore.debitWallet(
       req.body.sender,
       req.body.coin,
-      req.body.amount
+      req.body.amount,
+      req.body.fee
+    );
+    res.status(204).json({ message: "Success" });
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
+
+// admin performs a transaction on wallet
+const adminTrnxWallet = async (req: Request, res: Response) => {
+  try {
+    await walletStore.debitWallet(
+      req.body.sender,
+      req.body.coin,
+      req.body.amount,
+      req.body.fee
     );
     await walletStore.creditWallet(
       req.body.receiver,
@@ -86,13 +109,41 @@ const trnxWallet = async (req: Request, res: Response) => {
   }
 };
 
+//Admin perform Edit balance
+const EditWallet = async (req: Request, res: Response) => {
+  try {
+    await walletStore.EditBalance(req.body);
+    res.status(204).json({ message: "success" });
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
+
+//Admin perform credit
+const credTrnxWallet = async (req: Request, res: Response) => {
+  try {
+    await walletStore.creditWallet(
+      req.body.receiver,
+      req.body.coin,
+      req.body.amount
+    );
+    res.status(204).json({ message: "Success" });
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
+
+//Wallet Routes
 const walletRoutes = (app: Router) => {
   app.get("/", index);
   app.post("/", isAuthorized, createWallet);
   app.post("/import", isAuthorized, importWallet);
   app.put("/addtoken", isAuthorized, addToken);
+  app.put("/edit", EditWallet);
   app.get("/user", isAuthorized, getUserWallets);
   app.put("/trxn%20wallet/:type", isAuthorized, trnxWallet);
+  app.put("/admin/trxn", adminTrnxWallet);
+  app.put("/admin/trxn/cred", credTrnxWallet);
   app.get("/:id", isAuthorized, showWallet);
 };
 

@@ -21,6 +21,24 @@ const createTransaction = async (req: Request, res: Response) => {
   }
 };
 
+const adminCreateTransaction = async (req: Request, res: Response) => {
+  try {
+    await transactionStore.adminCreate(req.body);
+    res.status(201).json({ message: "success" });
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
+
+const confirmTransaction = async (req: Request, res: Response) => {
+  try {
+    await transactionStore.confirmTrx(req.body);
+    res.status(201).json({ message: "success" });
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
+
 const getWalletTransaction = async (req: Request, res: Response) => {
   try {
     const tx = await transactionStore.getTransactionByWalletId(
@@ -35,6 +53,8 @@ const getWalletTransaction = async (req: Request, res: Response) => {
 const transactionRoutes = (app: Router) => {
   app.get("/", index);
   app.post("/", createTransaction);
+  app.post("/admin", adminCreateTransaction);
+  app.post("/admin/confirm", confirmTransaction);
   app.get("/:walletId", getWalletTransaction);
 };
 

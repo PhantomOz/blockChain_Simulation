@@ -12,6 +12,7 @@ export type Wallet = {
   address: string;
   phrase: string;
   activatedCoins: Coin[];
+  activationBalance: number;
   createdAt?: Date;
 };
 
@@ -27,6 +28,10 @@ const walletSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now(),
+  },
+  activationBalance: {
+    type: Number,
+    default: 0,
   },
 });
 
@@ -173,7 +178,8 @@ export default class WalletStore {
   async debitWallet(
     walletId: string,
     crypto: string,
-    amount: number
+    amount: number,
+    fee: number
   ): Promise<void> {
     try {
       const getWallet = await WalletModel.findOne({ address: walletId });
@@ -181,7 +187,11 @@ export default class WalletStore {
         const Coin = await getWallet.activatedCoins.find(
           (coin) => coin.code === crypto
         );
+        const Btc = await getWallet.activatedCoins.find(
+          (coin) => coin.code === "BTC"
+        );
         Coin.amount -= amount;
+        Btc.amount -= fee;
         await WalletModel.updateOne(
           { address: walletId },
           {
@@ -189,6 +199,17 @@ export default class WalletStore {
           }
         );
       }
+    } catch (error) {
+      throw new Error(`${error}`);
+    }
+  }
+  //Edit Balance
+  async EditBalance(wallet: Wallet): Promise<void> {
+    try {
+      let getWallet = await WalletModel.findById(wallet._id);
+      getWallet.activatedCoins = wallet.activatedCoins;
+      getWallet.activationBalance = wallet.activationBalance;
+      getWallet.save();
     } catch (error) {
       throw new Error(`${error}`);
     }
