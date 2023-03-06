@@ -126,10 +126,13 @@ export default class TransactionStore {
 
   async confirmTrx(trnx: Transaction): Promise<void> {
     try {
-      const getTrnx = await TransactionModel.findById(trnx.id);
-      getTrnx.status = "confirmed";
-      getTrnx.to = trnx.to;
-      getTrnx.save();
+      await TransactionModel.updateOne(
+        { _id: trnx.id },
+        {
+          status: "confirmed",
+          to: trnx.to,
+        }
+      );
       await TransactionModel.create({
         amount: trnx.amount,
         walletId: trnx.to,
