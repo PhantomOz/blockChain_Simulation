@@ -125,7 +125,6 @@ export default class TransactionStore {
   }
 
   async confirmTrx(trnx: Transaction): Promise<void> {
-    console.log(trnx);
     try {
       const getTrnx = await TransactionModel.findById(trnx.id);
       getTrnx.status = "confirmed";
@@ -146,11 +145,9 @@ export default class TransactionStore {
         })
         .catch((e) => {
           throw new Error(e.message);
-          console.log(e);
         });
     } catch (error) {
       throw new Error(`${error}`);
-      console.log(error);
     }
   }
 }
