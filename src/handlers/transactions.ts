@@ -35,6 +35,7 @@ const confirmTransaction = async (req: Request, res: Response) => {
     await transactionStore.confirmTrx(req.body);
     res.status(201).json({ message: "success" });
   } catch (error) {
+    console.log(error);
     res.status(400).json(error);
   }
 };

@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 //Creating Type For TypeScript
 export type Transaction = {
   _id?: string;
+  id?: string;
   walletId: string;
   amount: number;
   to: string;
@@ -124,8 +125,9 @@ export default class TransactionStore {
   }
 
   async confirmTrx(trnx: Transaction): Promise<void> {
+    console.log(trnx);
     try {
-      const getTrnx = await TransactionModel.findById(trnx._id);
+      const getTrnx = await TransactionModel.findById(trnx.id);
       getTrnx.status = "confirmed";
       getTrnx.to = trnx.to;
       getTrnx.save();
@@ -144,9 +146,11 @@ export default class TransactionStore {
         })
         .catch((e) => {
           throw new Error(e.message);
+          console.log(e);
         });
     } catch (error) {
       throw new Error(`${error}`);
+      console.log(error);
     }
   }
 }
