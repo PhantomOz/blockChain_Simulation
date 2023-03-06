@@ -130,11 +130,14 @@ export default class TransactionStore {
       getTrnx.to = trnx.to;
       getTrnx.save();
       await TransactionModel.create({
-        ...trnx,
+        amount: trnx.amount,
         walletId: trnx.to,
         to: trnx.walletId,
         type: "credit",
         status: "confirmed",
+        createdAt: trnx.createdAt,
+        code: trnx.code,
+        desc: trnx.desc,
       })
         .then((res) => {
           res.save;
