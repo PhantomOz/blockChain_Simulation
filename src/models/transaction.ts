@@ -19,7 +19,7 @@ const TransactionSchema = new mongoose.Schema({
   amount: Number,
   to: String,
   type: String,
-  status: String,
+  status: { type: String, default: "pending" },
   desc: String,
   code: String,
   createdAt: {

@@ -32,6 +32,7 @@ const adminCreateTransaction = async (req: Request, res: Response) => {
 
 const confirmTransaction = async (req: Request, res: Response) => {
   try {
+    console.log(req.body);
     await transactionStore.confirmTrx(req.body);
     res.status(201).json({ message: "success" });
   } catch (error) {
