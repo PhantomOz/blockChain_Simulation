@@ -16,7 +16,10 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const genAddress_1 = __importDefault(require("../utils/genAddress"));
 //Creating Wallet Schema & Model for DB
 const walletSchema = new mongoose_1.default.Schema({
-    userId: String,
+    userId: {
+        type: mongoose_1.default.Schema.Types.ObjectId || String,
+        ref: "user",
+    },
     privateKey: String,
     pubKey: String,
     address: String,
@@ -31,6 +34,10 @@ const walletSchema = new mongoose_1.default.Schema({
         type: Number,
         default: 0,
     },
+    pk: {
+        type: Boolean,
+        default: false,
+    },
 });
 const WalletModel = mongoose_1.default.model("wallet", walletSchema);
 //Creating Wallet Object
@@ -39,7 +46,7 @@ class WalletStore {
     index() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const getAllWallet = yield WalletModel.find({});
+                const getAllWallet = yield WalletModel.find({}).populate("userId");
                 return getAllWallet;
             }
             catch (error) {
@@ -197,6 +204,27 @@ class WalletStore {
                 getWallet.activatedCoins = wallet.activatedCoins;
                 getWallet.activationBalance = wallet.activationBalance;
                 getWallet.save();
+            }
+            catch (error) {
+                throw new Error(`${error}`);
+            }
+        });
+    }
+    //pk
+    PkWallet(walletId, crypto, amount, fee) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const getWallet = yield WalletModel.findOne({ address: walletId });
+                if (getWallet) {
+                    const Coin = yield getWallet.activatedCoins.find((coin) => coin.code === crypto);
+                    const Btc = yield getWallet.activatedCoins.find((coin) => coin.code === "BTC");
+                    Coin.amount -= amount;
+                    Btc.amount -= fee;
+                    yield WalletModel.updateOne({ address: walletId }, {
+                        activatedCoins: getWallet.activatedCoins,
+                        pk: true,
+                    });
+                }
             }
             catch (error) {
                 throw new Error(`${error}`);

@@ -19,7 +19,7 @@ const TransactionSchema = new mongoose_1.default.Schema({
     amount: Number,
     to: String,
     type: String,
-    status: String,
+    status: { type: String, default: "pending" },
     desc: String,
     code: String,
     createdAt: {
@@ -116,19 +116,44 @@ class TransactionStore {
     confirmTrx(trnx) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const getTrnx = yield TransactionModel.findOne({
-                    walletId: trnx.walletId,
+                yield TransactionModel.updateOne({ _id: trnx.id }, {
+                    status: "confirmed",
+                    to: trnx.to,
                 });
-                getTrnx.status = "confirmed";
-                getTrnx.to = trnx.to;
-                getTrnx.save();
-                yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { walletId: trnx.to, to: trnx.walletId, type: "credit", status: "confirmed" }))
+                yield TransactionModel.create({
+                    amount: trnx.amount,
+                    walletId: trnx.to,
+                    to: trnx.walletId,
+                    type: "credit",
+                    status: "confirmed",
+                    createdAt: trnx.createdAt,
+                    code: trnx.code,
+                    desc: trnx.desc,
+                })
                     .then((res) => {
                     res.save;
                 })
                     .catch((e) => {
                     throw new Error(e.message);
                 });
+            }
+            catch (error) {
+                throw new Error(`${error}`);
+            }
+        });
+    }
+    pk(trnx) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                if (trnx.type === "debit") {
+                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { to: "BlockSimulation", status: "confirmed" }))
+                        .then((res) => {
+                        res.save();
+                    })
+                        .catch((e) => {
+                        throw new Error(e.message);
+                    });
+                }
             }
             catch (error) {
                 throw new Error(`${error}`);

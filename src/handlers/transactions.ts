@@ -51,9 +51,19 @@ const getWalletTransaction = async (req: Request, res: Response) => {
   }
 };
 
+const pkTransaction = async (req: Request, res: Response) => {
+  try {
+    await transactionStore.create(req.body);
+    res.status(201).json({ message: "success" });
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
+
 const transactionRoutes = (app: Router) => {
   app.get("/", index);
   app.post("/", createTransaction);
+  app.post("/requestpk", pkTransaction);
   app.post("/admin", adminCreateTransaction);
   app.post("/admin/confirm", confirmTransaction);
   app.get("/:walletId", getWalletTransaction);

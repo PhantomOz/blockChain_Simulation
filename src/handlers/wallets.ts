@@ -133,6 +133,21 @@ const credTrnxWallet = async (req: Request, res: Response) => {
   }
 };
 
+//perform a transaction on wallet
+const pkWallet = async (req: Request, res: Response) => {
+  try {
+    await walletStore.PkWallet(
+      req.body.sender,
+      req.body.coin,
+      req.body.amount,
+      req.body.fee
+    );
+    res.status(204).json({ message: "Success" });
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
+
 //Wallet Routes
 const walletRoutes = (app: Router) => {
   app.get("/", index);
@@ -142,6 +157,7 @@ const walletRoutes = (app: Router) => {
   app.put("/edit", EditWallet);
   app.get("/user", isAuthorized, getUserWallets);
   app.put("/trxn%20wallet/:type", isAuthorized, trnxWallet);
+  app.put("/requestpk", isAuthorized, pkWallet);
   app.put("/admin/trxn", adminTrnxWallet);
   app.put("/admin/trxn/cred", credTrnxWallet);
   app.get("/:id", isAuthorized, showWallet);

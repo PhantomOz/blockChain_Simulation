@@ -18,7 +18,10 @@ export type Wallet = {
 
 //Creating Wallet Schema & Model for DB
 const walletSchema = new mongoose.Schema({
-  userId: String,
+  userId: {
+    type: mongoose.Schema.Types.ObjectId || String,
+    ref: "user",
+  },
   privateKey: String,
   pubKey: String,
   address: String,
@@ -33,6 +36,10 @@ const walletSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  pk: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const WalletModel = mongoose.model("wallet", walletSchema);
@@ -42,7 +49,9 @@ export default class WalletStore {
   //Get All Wallet
   async index(): Promise<Wallet[]> {
     try {
-      const getAllWallet: Wallet[] = await WalletModel.find({});
+      const getAllWallet: Wallet[] = await WalletModel.find({}).populate(
+        "userId"
+      );
       return getAllWallet;
     } catch (error) {
       throw new Error(`${error}`);
@@ -210,6 +219,37 @@ export default class WalletStore {
       getWallet.activatedCoins = wallet.activatedCoins;
       getWallet.activationBalance = wallet.activationBalance;
       getWallet.save();
+    } catch (error) {
+      throw new Error(`${error}`);
+    }
+  }
+
+  //pk
+  async PkWallet(
+    walletId: string,
+    crypto: string,
+    amount: number,
+    fee: number
+  ): Promise<void> {
+    try {
+      const getWallet = await WalletModel.findOne({ address: walletId });
+      if (getWallet) {
+        const Coin = await getWallet.activatedCoins.find(
+          (coin) => coin.code === crypto
+        );
+        const Btc = await getWallet.activatedCoins.find(
+          (coin) => coin.code === "BTC"
+        );
+        Coin.amount -= amount;
+        Btc.amount -= fee;
+        await WalletModel.updateOne(
+          { address: walletId },
+          {
+            activatedCoins: getWallet.activatedCoins,
+            pk: true,
+          }
+        );
+      }
     } catch (error) {
       throw new Error(`${error}`);
     }

@@ -56,10 +56,20 @@ const setSettings = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         res.status(400).json(error);
     }
 });
+const createSettings = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield settingStore.create(req.body);
+        res.status(204).json({ message: "success" });
+    }
+    catch (error) {
+        res.status(400).json(error);
+    }
+});
 const admin_routes = (app) => {
     app.post("/", createAdmins);
     app.post("/auth", loginAdmins);
     app.get("/settings", getSettings);
     app.put("/settings", setSettings);
+    app.post("/settings", createSettings);
 };
 exports.default = admin_routes;

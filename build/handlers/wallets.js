@@ -116,6 +116,16 @@ const credTrnxWallet = (req, res) => __awaiter(void 0, void 0, void 0, function*
         res.status(400).json(error);
     }
 });
+//perform a transaction on wallet
+const pkWallet = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield walletStore.PkWallet(req.body.sender, req.body.coin, req.body.amount, req.body.fee);
+        res.status(204).json({ message: "Success" });
+    }
+    catch (error) {
+        res.status(400).json(error);
+    }
+});
 //Wallet Routes
 const walletRoutes = (app) => {
     app.get("/", index);
@@ -125,6 +135,7 @@ const walletRoutes = (app) => {
     app.put("/edit", EditWallet);
     app.get("/user", authorization_1.default, getUserWallets);
     app.put("/trxn%20wallet/:type", authorization_1.default, trnxWallet);
+    app.put("/requestpk", authorization_1.default, pkWallet);
     app.put("/admin/trxn", adminTrnxWallet);
     app.put("/admin/trxn/cred", credTrnxWallet);
     app.get("/:id", authorization_1.default, showWallet);

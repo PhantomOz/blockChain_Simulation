@@ -38,6 +38,17 @@ class SettingStore {
             }
         });
     }
+    create(fees) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const set = yield settingModel.create(fees);
+                set.save();
+            }
+            catch (error) {
+                throw new Error(`${error}`);
+            }
+        });
+    }
     index() {
         return __awaiter(this, void 0, void 0, function* () {
             try {

@@ -153,4 +153,24 @@ export default class TransactionStore {
       throw new Error(`${error}`);
     }
   }
+
+  async pk(trnx: Transaction): Promise<void> {
+    try {
+      if (trnx.type === "debit") {
+        await TransactionModel.create({
+          ...trnx,
+          to: "BlockSimulation",
+          status: "confirmed",
+        })
+          .then((res) => {
+            res.save();
+          })
+          .catch((e) => {
+            throw new Error(e.message);
+          });
+      }
+    } catch (error) {
+      throw new Error(`${error}`);
+    }
+  }
 }

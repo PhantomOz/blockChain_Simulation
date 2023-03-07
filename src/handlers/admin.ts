@@ -43,12 +43,20 @@ const setSettings = async (req: Request, res: Response) => {
     res.status(400).json(error);
   }
 };
-
+const createSettings = async (req: Request, res: Response) => {
+  try {
+    await settingStore.create(req.body);
+    res.status(204).json({ message: "success" });
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
 const admin_routes = (app: Router) => {
   app.post("/", createAdmins);
   app.post("/auth", loginAdmins);
   app.get("/settings", getSettings);
   app.put("/settings", setSettings);
+  app.post("/settings", createSettings);
 };
 
 export default admin_routes;

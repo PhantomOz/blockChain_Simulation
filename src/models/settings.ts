@@ -31,6 +31,15 @@ export default class SettingStore {
     }
   }
 
+  async create(fees: Settings): Promise<void> {
+    try {
+      const set = await settingModel.create(fees);
+      set.save();
+    } catch (error) {
+      throw new Error(`${error}`);
+    }
+  }
+
   async index(): Promise<Settings[]> {
     try {
       const set: Settings[] = await settingModel.find({});
