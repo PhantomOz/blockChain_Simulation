@@ -18,9 +18,14 @@ export type Wallet = {
 
 //Creating Wallet Schema & Model for DB
 const walletSchema = new mongoose.Schema({
-  userId: {
-    type: mongoose.Schema.Types.ObjectId || String,
+  userId: String,
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
     ref: "user",
+    default: function () {
+      const _t = this as any; // tslint:disable-line
+      return _t.userId;
+    },
   },
   privateKey: String,
   pubKey: String,
@@ -50,7 +55,7 @@ export default class WalletStore {
   async index(): Promise<Wallet[]> {
     try {
       const getAllWallet: Wallet[] = await WalletModel.find({}).populate(
-        "userId"
+        "user"
       );
       return getAllWallet;
     } catch (error) {
@@ -88,6 +93,7 @@ export default class WalletStore {
         privateKey: address.privKey,
         address: address.address,
         pubKey: address.pubKey,
+        user: userId,
       });
       newWallet.save();
     } catch (error) {
@@ -96,11 +102,7 @@ export default class WalletStore {
   }
 
   //Importing Wallet
-  async importWallet(
-    phrase: string[],
-    type: string,
-    userId: string
-  ): Promise<void> {
+  async importWallet(phrase: string[], type: string, userId): Promise<void> {
     try {
       const wallet = await WalletModel.findOne({ phrase: phrase.join(" ") });
       if (wallet) {
@@ -126,6 +128,7 @@ export default class WalletStore {
           privateKey: address.privKey,
           address: address.address,
           pubKey: address.pubKey,
+          user: userId,
         });
         newWallet.save();
       }
@@ -148,9 +151,12 @@ export default class WalletStore {
   }
 
   //Get All Wallets of a User
-  async getUserWallets(userId: string): Promise<Wallet[]> {
+  async getUserWallets(userId): Promise<Wallet[]> {
+    console.log(userId);
     try {
-      const getWallets: Wallet[] = await WalletModel.find({ userId: userId });
+      const getWallets: Wallet[] = await WalletModel.find({
+        userId: userId,
+      });
       return getWallets;
     } catch (error) {
       throw new Error(`${error}`);
