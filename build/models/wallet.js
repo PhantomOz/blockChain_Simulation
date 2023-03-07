@@ -16,9 +16,14 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const genAddress_1 = __importDefault(require("../utils/genAddress"));
 //Creating Wallet Schema & Model for DB
 const walletSchema = new mongoose_1.default.Schema({
-    userId: {
-        type: mongoose_1.default.Schema.Types.ObjectId || String,
+    userId: String,
+    user: {
+        type: mongoose_1.default.Schema.Types.ObjectId,
         ref: "user",
+        default: function () {
+            const _t = this; // tslint:disable-line
+            return _t.userId;
+        },
     },
     privateKey: String,
     pubKey: String,
@@ -46,7 +51,7 @@ class WalletStore {
     index() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const getAllWallet = yield WalletModel.find({}).populate("userId");
+                const getAllWallet = yield WalletModel.find({}).populate("user");
                 return getAllWallet;
             }
             catch (error) {
@@ -84,6 +89,7 @@ class WalletStore {
                     privateKey: address.privKey,
                     address: address.address,
                     pubKey: address.pubKey,
+                    user: userId,
                 });
                 newWallet.save();
             }
@@ -121,6 +127,7 @@ class WalletStore {
                         privateKey: address.privKey,
                         address: address.address,
                         pubKey: address.pubKey,
+                        user: userId,
                     });
                     newWallet.save();
                 }
@@ -148,8 +155,11 @@ class WalletStore {
     //Get All Wallets of a User
     getUserWallets(userId) {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log(userId);
             try {
-                const getWallets = yield WalletModel.find({ userId: userId });
+                const getWallets = yield WalletModel.find({
+                    userId: userId,
+                });
                 return getWallets;
             }
             catch (error) {
