@@ -18,7 +18,16 @@ const Mailer = (email: string, message: string) => {
     from: process.env.EMAIL_ADDRESS,
     to: email,
     subject: "Verification Email",
-    html: message,
+    html: `
+            <body>
+              <div>
+                <img style='background-color: white;' src='https://res.cloudinary.com/weird-d/image/upload/v1676296954/cover_sakqo1.png' height=150px width=100% alt='logo'/>
+              </div>
+              <div>
+                ${message}
+              </div>
+            </body>
+          `,
   };
 
   Transporter.sendMail(mailOptions, function (error, info) {

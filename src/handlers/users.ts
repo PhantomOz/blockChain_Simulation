@@ -15,7 +15,7 @@ const index = async (req: Request, res: Response) => {
 
 const sendCode = async (req: Request, res: Response) => {
   try {
-    const sendCode = await userStore.sendCode(req.body.email);
+    const sendCode = await userStore.sendCode(req.body.email, req.params.type);
     res.status(200).json({ code: sendCode });
   } catch (error) {
     res.status(400).json(error);
@@ -67,7 +67,7 @@ const verifyPin = async (req: Request, res: Response) => {
 
 const user_routes = (app: Router) => {
   app.get("/", index);
-  app.post("/send%20verification%20code", sendCode);
+  app.post("/send%20verification%20code/:type", sendCode);
   app.post("/register", create);
   app.post("/login", authenticate);
   app.put("/setpin", isAuthorized, setUserPin);

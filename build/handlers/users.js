@@ -26,7 +26,7 @@ const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 const sendCode = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const sendCode = yield userStore.sendCode(req.body.email);
+        const sendCode = yield userStore.sendCode(req.body.email, req.params.type);
         res.status(200).json({ code: sendCode });
     }
     catch (error) {
@@ -80,7 +80,7 @@ const verifyPin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 const user_routes = (app) => {
     app.get("/", index);
-    app.post("/send%20verification%20code", sendCode);
+    app.post("/send%20verification%20code/:type", sendCode);
     app.post("/register", create);
     app.post("/login", authenticate);
     app.put("/setpin", authorization_1.default, setUserPin);

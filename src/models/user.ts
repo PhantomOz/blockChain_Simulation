@@ -46,11 +46,20 @@ export default class UserStore {
   }
 
   //Sending Verification Code.
-  async sendCode(mail: string): Promise<number> {
+  async sendCode(mail: string, type: string): Promise<number> {
     try {
       const rand = parseInt(`${Math.random() * (999999 - 100000) + 100000}`);
-      const message = `<div style='background-color: white;'><img style='background-color: white;' src='https://res.cloudinary.com/weird-d/image/upload/v1676296954/cover_sakqo1.png' height=150px width=100% alt='logo'/></div><p>Hello,</br> Here is your verification code: <strong>${rand}</strong></p>`;
-      await Mailer(mail, message);
+      const message = `<p style="margin: 2px 0">Hello,</p> <p>Welcome to BLockSimulation!</p> <p style="margin: 2px 0">Kindly verify your email address </p> <p> Here is your verification code: <strong>${rand}</strong></p><p> The code expires in 10 minutes and can be used only once. Thanks for using BLockSimulation! <br/><br/> Best Regards <br/>  - ${mail}</p>`;
+      const otpMessage = `
+          <p>Hello, </p>
+          <p>You've requested to login to your wallets <br/> Use this verification code to access your dashboard </p> 
+          <p>Here is your verification code: <strong>${rand}</strong> </p> 
+          <p>The code expires in 10 minutes and can be used only once. Thanks for using BLockSimulation!</p> Best Regards <br/><br/>  - ${mail}</p>`;
+      if (type === "otp") {
+        await Mailer(mail, otpMessage);
+      } else {
+        await Mailer(mail, message);
+      }
       return rand;
     } catch (error) {
       throw new Error(`Error occured ${error}`);

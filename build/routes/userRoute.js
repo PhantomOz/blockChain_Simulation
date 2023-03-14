@@ -134,12 +134,19 @@ const users_1 = __importDefault(require("../handlers/users"));
  *                  description: Bad Request
  *              500:
  *                  description: Internal server error
- * /users/send%20verification%20code:
+ * /users/send%20verification%20code/{type}:
  *      post:
  *          summary: Send verification code
  *          tags:
  *              - User Endpoints
  *          description: Sends request to the server to send verification code
+ *          parameters:
+ *              - in: path
+ *                name: type
+ *                schema:
+ *                  type: string
+ *                required: false
+ *                description: type of message being sent
  *          requestBody:
  *              required: true
  *              content:
