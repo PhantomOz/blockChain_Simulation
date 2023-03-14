@@ -14,10 +14,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const random_words_1 = __importDefault(require("random-words"));
 const hdaddressgenerator_1 = __importDefault(require("hdaddressgenerator"));
-const generateAddress = (mnePhrase = null) => __awaiter(void 0, void 0, void 0, function* () {
+const generateAddress = (mnePhrase = null, coin = "BTC") => __awaiter(void 0, void 0, void 0, function* () {
     const phrases = mnePhrase || (yield (0, random_words_1.default)({ exactly: 12 }));
     const mnemonic = phrases.join(" ");
-    const bip44 = yield hdaddressgenerator_1.default.withMnemonic(mnemonic, false, "BTC");
+    const bip44 = yield hdaddressgenerator_1.default.withMnemonic(mnemonic, false, coin);
     const address = yield bip44.generate(1);
     return {
         privKey: address[0].privKey,

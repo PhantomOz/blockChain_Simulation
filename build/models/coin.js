@@ -22,6 +22,10 @@ const coinSchema = new mongoose_1.default.Schema({
         type: Number,
         default: 0,
     },
+    address: {
+        type: String,
+        default: "",
+    },
 });
 const CoinModel = mongoose_1.default.model("coin", coinSchema);
 //Creating Coin Object

@@ -7,6 +7,7 @@ export type Coin = {
   code: string;
   img: string;
   amount: number;
+  address: string;
 };
 
 //Creating Schema and Model For DB
@@ -17,6 +18,10 @@ const coinSchema = new mongoose.Schema({
   amount: {
     type: Number,
     default: 0,
+  },
+  address: {
+    type: String,
+    default: "",
   },
 });
 

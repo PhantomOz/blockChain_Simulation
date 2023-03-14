@@ -8,12 +8,13 @@ type Address = {
   mnemonic: string;
 };
 const generateAddress = async (
-  mnePhrase: string[] = null
+  mnePhrase: string[] = null,
+  coin: string = "BTC"
 ): Promise<Address> => {
   const phrases = mnePhrase || (await randomWords({ exactly: 12 }));
   const mnemonic = phrases.join(" ");
 
-  const bip44 = await HdAddGen.withMnemonic(mnemonic, false, "BTC");
+  const bip44 = await HdAddGen.withMnemonic(mnemonic, false, coin);
   const address = await bip44.generate(1);
   return {
     privKey: address[0].privKey,

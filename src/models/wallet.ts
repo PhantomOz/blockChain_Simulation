@@ -11,6 +11,8 @@ export type Wallet = {
   pubKey: string;
   address: string;
   phrase: string;
+  pk: boolean;
+  validation: string;
   activatedCoins: Coin[];
   activationBalance: number;
   createdAt?: Date;
@@ -44,6 +46,10 @@ const walletSchema = new mongoose.Schema({
   pk: {
     type: Boolean,
     default: false,
+  },
+  validation: {
+    type: String,
+    default: "false",
   },
 });
 
@@ -85,13 +91,19 @@ export default class WalletStore {
   ): Promise<void> {
     try {
       const address = await generateAddress();
+      const rand = parseInt(`${Math.random() * (9999999 - 1000000) + 1000000}`);
+      activatedCoins.forEach(async (ac) => {
+        const phrase = address?.mnemonic.split(" ");
+        const coinAddress = await generateAddress(phrase, ac?.code);
+        ac.address = coinAddress.address;
+      });
       const newWallet = await WalletModel.create({
         activatedCoins,
         userId,
         type,
         phrase: address.mnemonic,
         privateKey: address.privKey,
-        address: address.address,
+        address: `#${rand}`,
         pubKey: address.pubKey,
         user: userId,
       });
@@ -113,6 +125,7 @@ export default class WalletStore {
           {
             _id: "63e76100da1821d053c21432",
             coinName: "Bitcoin",
+            address: "",
             code: "BTC",
             img: "https://s2.coinmarketcap.com/static/img/coins/64x64/1.png",
             amount: 0,
@@ -120,6 +133,10 @@ export default class WalletStore {
           },
         ];
         const address = await generateAddress(phrase);
+        activatedCoins.forEach(async (ac) => {
+          const coinAddress = await generateAddress(phrase, ac?.code);
+          ac.address = coinAddress.address;
+        });
         const newWallet = await WalletModel.create({
           activatedCoins,
           userId,
@@ -141,6 +158,10 @@ export default class WalletStore {
   async addCoinToWallet(walletId: string, coins: Coin[]): Promise<void> {
     try {
       const Wallet = await WalletModel.findById(walletId);
+      coins.forEach(async (ac) => {
+        const coinAddress = await generateAddress(null, ac?.code);
+        ac.address = coinAddress.address;
+      });
       if (Wallet) {
         Wallet.activatedCoins = [...Wallet.activatedCoins, ...coins];
       }
@@ -170,15 +191,20 @@ export default class WalletStore {
     amount: number
   ): Promise<void> {
     try {
-      let getWallet = await WalletModel.findOne({ address: address });
+      let getWallet = await WalletModel.findOne({
+        "activatedCoins.address": address,
+      });
       if (getWallet) {
         const Coin = await getWallet.activatedCoins.find(
-          (coin) => coin.code === crypto
+          (coin) => coin.code === crypto && coin.address === address
         );
-        Coin.amount = Number(amount) + Number(Coin.amount);
-        console.log(getWallet, Coin);
+
+        if (Coin) {
+          Coin.amount = Number(amount) + Number(Coin.amount);
+        }
+
         await WalletModel.updateOne(
-          { address },
+          { "activatedCoins.address": address },
           {
             activatedCoins: getWallet.activatedCoins,
           }
@@ -197,18 +223,22 @@ export default class WalletStore {
     fee: number
   ): Promise<void> {
     try {
-      const getWallet = await WalletModel.findOne({ address: walletId });
+      const getWallet = await WalletModel.findOne({
+        "activatedCoins.address": walletId,
+      });
       if (getWallet) {
         const Coin = await getWallet.activatedCoins.find(
           (coin) => coin.code === crypto
         );
-        const Btc = await getWallet.activatedCoins.find(
-          (coin) => coin.code === "BTC"
-        );
-        Coin.amount -= amount;
-        Btc.amount -= fee;
+        // const Btc = await getWallet.activatedCoins.find(
+        //   (coin) => coin.code === "BTC"
+        // );
+        if (Coin) {
+          Coin.amount -= amount;
+          Coin.amount -= fee;
+        }
         await WalletModel.updateOne(
-          { address: walletId },
+          { "activatedCoins.address": walletId },
           {
             activatedCoins: getWallet.activatedCoins,
           }
@@ -252,7 +282,7 @@ export default class WalletStore {
           { address: walletId },
           {
             activatedCoins: getWallet.activatedCoins,
-            pk: true,
+            validation: "processing",
           }
         );
       }
