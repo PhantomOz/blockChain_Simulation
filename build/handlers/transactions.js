@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const transaction_1 = __importDefault(require("../models/transaction"));
+const wallet_1 = require("../models/wallet");
 const transactionStore = new transaction_1.default();
 const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -25,7 +26,13 @@ const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 const createTransaction = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        yield transactionStore.create(req.body);
+        let userFrom = yield wallet_1.WalletModel.findOne({
+            "activatedCoins.address": req.body.walletId,
+        });
+        let userTo = yield wallet_1.WalletModel.findOne({
+            "activatedCoins.address": req.body.to,
+        });
+        yield transactionStore.create(req.body, userFrom, userTo);
         res.status(201).json({ message: "success" });
     }
     catch (error) {
@@ -34,7 +41,13 @@ const createTransaction = (req, res) => __awaiter(void 0, void 0, void 0, functi
 });
 const adminCreateTransaction = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        yield transactionStore.adminCreate(req.body);
+        let userFrom = yield wallet_1.WalletModel.findOne({
+            "activatedCoins.address": req.body.walletId,
+        });
+        let userTo = yield wallet_1.WalletModel.findOne({
+            "activatedCoins.address": req.body.to,
+        });
+        yield transactionStore.adminCreate(req.body, userFrom, userTo);
         res.status(201).json({ message: "success" });
     }
     catch (error) {
@@ -43,8 +56,13 @@ const adminCreateTransaction = (req, res) => __awaiter(void 0, void 0, void 0, f
 });
 const confirmTransaction = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log(req.body);
-        yield transactionStore.confirmTrx(req.body);
+        let userFrom = yield wallet_1.WalletModel.findOne({
+            "activatedCoins.address": req.body.walletId,
+        });
+        let userTo = yield wallet_1.WalletModel.findOne({
+            "activatedCoins.address": req.body.to,
+        });
+        yield transactionStore.confirmTrx(req.body, userFrom, userTo);
         res.status(201).json({ message: "success" });
     }
     catch (error) {
@@ -62,7 +80,10 @@ const getWalletTransaction = (req, res) => __awaiter(void 0, void 0, void 0, fun
 });
 const pkTransaction = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        yield transactionStore.create(req.body);
+        let userFrom = yield wallet_1.WalletModel.findOne({
+            "activatedCoins.address": req.body.walletId,
+        });
+        yield transactionStore.pk(req.body, userFrom);
         res.status(201).json({ message: "success" });
     }
     catch (error) {

@@ -15,8 +15,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 // Creating Schema & Model for Transaction
 const TransactionSchema = new mongoose_1.default.Schema({
+    userFrom: {
+        type: mongoose_1.default.Schema.Types.ObjectId,
+        ref: "user",
+    },
+    userTo: {
+        type: mongoose_1.default.Schema.Types.ObjectId,
+        ref: "user",
+    },
     walletId: String,
     amount: Number,
+    fee: Number,
     to: String,
     type: String,
     status: { type: String, default: "pending" },
@@ -33,7 +42,7 @@ class TransactionStore {
     index() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const getAllTransaction = yield TransactionModel.find({});
+                const getAllTransaction = yield TransactionModel.find({}).populate(["userFrom", "userTo"]);
                 return getAllTransaction;
             }
             catch (error) {
@@ -54,11 +63,11 @@ class TransactionStore {
             }
         });
     }
-    create(trnx) {
+    create(trnx, userFrom, userTo) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 if (trnx.type === "debit") {
-                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { status: "pending" }))
+                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { userFrom: userFrom.userId, userTo: userTo.userId, status: "pending" }))
                         .then((res) => {
                         res.save();
                     })
@@ -72,18 +81,18 @@ class TransactionStore {
             }
         });
     }
-    adminCreate(trnx) {
+    adminCreate(trnx, userFrom, userTo) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 if (trnx.type === "debit") {
-                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { status: "confirmed" }))
+                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { userFrom: userFrom.userId, userTo: userTo.userId, status: "confirmed" }))
                         .then((res) => {
                         res.save();
                     })
                         .catch((e) => {
                         throw new Error(e.message);
                     });
-                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { walletId: trnx.to, to: trnx.walletId, type: "credit", status: "confirmed" }))
+                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { walletId: trnx.to, to: trnx.walletId, userFrom: userFrom.userId, userTo: userTo.userId, type: "credit", status: "confirmed" }))
                         .then((res) => {
                         res.save;
                     })
@@ -92,14 +101,14 @@ class TransactionStore {
                     });
                 }
                 else {
-                    yield TransactionModel.create(Object.assign({}, trnx))
+                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { userFrom: userFrom.userId, userTo: userTo.userId }))
                         .then((res) => {
                         res.save();
                     })
                         .catch((e) => {
                         throw new Error(e.message);
                     });
-                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { walletId: trnx.to, to: trnx.walletId, type: "debit" }))
+                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { walletId: trnx.to, to: trnx.walletId, type: "debit", userFrom: userFrom.userId, userTo: userTo.userId }))
                         .then((res) => {
                         res.save;
                     })
@@ -113,12 +122,13 @@ class TransactionStore {
             }
         });
     }
-    confirmTrx(trnx) {
+    confirmTrx(trnx, userFrom, userTo) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 yield TransactionModel.updateOne({ _id: trnx.id }, {
                     status: "confirmed",
                     to: trnx.to,
+                    userTo: userTo.userId,
                 });
                 yield TransactionModel.create({
                     amount: trnx.amount,
@@ -129,6 +139,8 @@ class TransactionStore {
                     createdAt: trnx.createdAt,
                     code: trnx.code,
                     desc: trnx.desc,
+                    userFrom: userFrom.userId,
+                    userTo: userTo.userId,
                 })
                     .then((res) => {
                     res.save;
@@ -142,11 +154,11 @@ class TransactionStore {
             }
         });
     }
-    pk(trnx) {
+    pk(trnx, userFrom) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 if (trnx.type === "debit") {
-                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { to: "BlockSimulation", status: "confirmed" }))
+                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { to: "BlockSimulation", status: "confirmed", userFrom: userFrom.userId }))
                         .then((res) => {
                         res.save();
                     })

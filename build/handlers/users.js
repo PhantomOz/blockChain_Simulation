@@ -45,7 +45,7 @@ const create = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 const authenticate = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const token = yield userStore.authenticate(req.body.email);
-        res.status(201).json({ token });
+        res.status(201).json(token);
     }
     catch (error) {
         res.status(400).json(error);

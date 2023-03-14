@@ -95,7 +95,7 @@ export default class UserStore {
   async authenticate(email: string): Promise<string | undefined | {}> {
     try {
       const checkForUser: User | null = await UserModel.findOne({
-        email: email,
+        email: email.toLowerCase(),
       });
       if (checkForUser) {
         const user = {

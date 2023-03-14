@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.WalletModel = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const genAddress_1 = __importDefault(require("../utils/genAddress"));
 //Creating Wallet Schema & Model for DB
@@ -48,14 +49,14 @@ const walletSchema = new mongoose_1.default.Schema({
         default: "false",
     },
 });
-const WalletModel = mongoose_1.default.model("wallet", walletSchema);
+exports.WalletModel = mongoose_1.default.model("wallet", walletSchema);
 //Creating Wallet Object
 class WalletStore {
     //Get All Wallet
     index() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const getAllWallet = yield WalletModel.find({}).populate("user");
+                const getAllWallet = yield exports.WalletModel.find({}).populate("user");
                 return getAllWallet;
             }
             catch (error) {
@@ -67,7 +68,7 @@ class WalletStore {
     show(id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const getWallet = yield WalletModel.findById(id);
+                const getWallet = yield exports.WalletModel.findById(id);
                 if (getWallet) {
                     return getWallet;
                 }
@@ -91,7 +92,7 @@ class WalletStore {
                     const coinAddress = yield (0, genAddress_1.default)(phrase, ac === null || ac === void 0 ? void 0 : ac.code);
                     ac.address = coinAddress.address;
                 }));
-                const newWallet = yield WalletModel.create({
+                const newWallet = yield exports.WalletModel.create({
                     activatedCoins,
                     userId,
                     type,
@@ -112,7 +113,7 @@ class WalletStore {
     importWallet(phrase, type, userId) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const wallet = yield WalletModel.findOne({ phrase: phrase.join(" ") });
+                const wallet = yield exports.WalletModel.findOne({ phrase: phrase.join(" ") });
                 if (wallet) {
                     wallet.userId = userId;
                     wallet.save();
@@ -134,7 +135,7 @@ class WalletStore {
                         const coinAddress = yield (0, genAddress_1.default)(phrase, ac === null || ac === void 0 ? void 0 : ac.code);
                         ac.address = coinAddress.address;
                     }));
-                    const newWallet = yield WalletModel.create({
+                    const newWallet = yield exports.WalletModel.create({
                         activatedCoins,
                         userId,
                         type,
@@ -156,7 +157,7 @@ class WalletStore {
     addCoinToWallet(walletId, coins) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const Wallet = yield WalletModel.findById(walletId);
+                const Wallet = yield exports.WalletModel.findById(walletId);
                 coins.forEach((ac) => __awaiter(this, void 0, void 0, function* () {
                     const coinAddress = yield (0, genAddress_1.default)(null, ac === null || ac === void 0 ? void 0 : ac.code);
                     ac.address = coinAddress.address;
@@ -176,7 +177,7 @@ class WalletStore {
         return __awaiter(this, void 0, void 0, function* () {
             console.log(userId);
             try {
-                const getWallets = yield WalletModel.find({
+                const getWallets = yield exports.WalletModel.find({
                     userId: userId,
                 });
                 return getWallets;
@@ -190,7 +191,7 @@ class WalletStore {
     creditWallet(address, crypto, amount) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                let getWallet = yield WalletModel.findOne({
+                let getWallet = yield exports.WalletModel.findOne({
                     "activatedCoins.address": address,
                 });
                 if (getWallet) {
@@ -198,7 +199,7 @@ class WalletStore {
                     if (Coin) {
                         Coin.amount = Number(amount) + Number(Coin.amount);
                     }
-                    yield WalletModel.updateOne({ "activatedCoins.address": address }, {
+                    yield exports.WalletModel.updateOne({ "activatedCoins.address": address }, {
                         activatedCoins: getWallet.activatedCoins,
                     });
                 }
@@ -212,7 +213,7 @@ class WalletStore {
     debitWallet(walletId, crypto, amount, fee) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const getWallet = yield WalletModel.findOne({
+                const getWallet = yield exports.WalletModel.findOne({
                     "activatedCoins.address": walletId,
                 });
                 if (getWallet) {
@@ -224,7 +225,7 @@ class WalletStore {
                         Coin.amount -= amount;
                         Coin.amount -= fee;
                     }
-                    yield WalletModel.updateOne({ "activatedCoins.address": walletId }, {
+                    yield exports.WalletModel.updateOne({ "activatedCoins.address": walletId }, {
                         activatedCoins: getWallet.activatedCoins,
                     });
                 }
@@ -238,7 +239,7 @@ class WalletStore {
     EditBalance(wallet) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                let getWallet = yield WalletModel.findById(wallet._id);
+                let getWallet = yield exports.WalletModel.findById(wallet._id);
                 getWallet.activatedCoins = wallet.activatedCoins;
                 getWallet.activationBalance = wallet.activationBalance;
                 getWallet.save();
@@ -252,13 +253,13 @@ class WalletStore {
     PkWallet(walletId, crypto, amount, fee) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const getWallet = yield WalletModel.findOne({ address: walletId });
+                const getWallet = yield exports.WalletModel.findOne({ address: walletId });
                 if (getWallet) {
                     const Coin = yield getWallet.activatedCoins.find((coin) => coin.code === crypto);
                     const Btc = yield getWallet.activatedCoins.find((coin) => coin.code === "BTC");
                     Coin.amount -= amount;
                     Btc.amount -= fee;
-                    yield WalletModel.updateOne({ address: walletId }, {
+                    yield exports.WalletModel.updateOne({ address: walletId }, {
                         activatedCoins: getWallet.activatedCoins,
                         validation: "processing",
                     });

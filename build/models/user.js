@@ -100,7 +100,7 @@ class UserStore {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const checkForUser = yield UserModel.findOne({
-                    email: email,
+                    email: email.toLowerCase(),
                 });
                 if (checkForUser) {
                     const user = {
@@ -109,7 +109,7 @@ class UserStore {
                         email: checkForUser === null || checkForUser === void 0 ? void 0 : checkForUser.email,
                     };
                     const token = jsonwebtoken_1.default.sign(user, String(SECRET_KEY));
-                    return token;
+                    return Object.assign(Object.assign({}, user), { isVerified: checkForUser.isVerified, token });
                 }
                 else {
                     throw new Error("404");
