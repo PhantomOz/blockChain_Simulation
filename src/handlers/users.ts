@@ -34,7 +34,7 @@ const create = async (req: Request, res: Response) => {
 const authenticate = async (req: Request, res: Response) => {
   try {
     const token = await userStore.authenticate(req.body.email);
-    res.status(201).json({ token });
+    res.status(201).json(token);
   } catch (error) {
     res.status(400).json(error);
   }

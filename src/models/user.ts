@@ -92,7 +92,7 @@ export default class UserStore {
   }
 
   // Logging In Users (Authentication)
-  async authenticate(email: string): Promise<string | undefined> {
+  async authenticate(email: string): Promise<string | undefined | {}> {
     try {
       const checkForUser: User | null = await UserModel.findOne({
         email: email,
@@ -105,7 +105,7 @@ export default class UserStore {
         };
 
         const token = jwt.sign(user, String(SECRET_KEY));
-        return token;
+        return { ...user, isVerified: checkForUser.isVerified, token };
       } else {
         throw new Error("404");
       }
