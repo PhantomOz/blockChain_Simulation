@@ -4,6 +4,8 @@ import mongoose from "mongoose";
 export type Transaction = {
   _id?: string;
   id?: string;
+  userto?: string;
+  userFrom?: string;
   walletId: string;
   amount: number;
   to: string;
@@ -12,11 +14,21 @@ export type Transaction = {
   code: string;
   status: string;
   createdAt?: string;
+  fee: Number;
 };
 // Creating Schema & Model for Transaction
 const TransactionSchema = new mongoose.Schema({
+  userFrom: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user",
+  },
+  userTo: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user",
+  },
   walletId: String,
   amount: Number,
+  fee: Number,
   to: String,
   type: String,
   status: { type: String, default: "pending" },
@@ -34,7 +46,9 @@ const TransactionModel = mongoose.model("transaction", TransactionSchema);
 export default class TransactionStore {
   async index(): Promise<Transaction[]> {
     try {
-      const getAllTransaction: Transaction[] = await TransactionModel.find({});
+      const getAllTransaction: Transaction[] = await TransactionModel.find(
+        {}
+      ).populate(["userFrom", "userTo"]);
       return getAllTransaction;
     } catch (error) {
       throw new Error(`${error}`);
@@ -51,11 +65,13 @@ export default class TransactionStore {
       throw new Error(`${error}`);
     }
   }
-  async create(trnx: Transaction): Promise<void> {
+  async create(trnx: Transaction, userFrom, userTo): Promise<void> {
     try {
       if (trnx.type === "debit") {
         await TransactionModel.create({
           ...trnx,
+          userFrom: userFrom.userId,
+          userTo: userTo.userId,
           status: "pending",
         })
           .then((res) => {
@@ -70,11 +86,13 @@ export default class TransactionStore {
     }
   }
 
-  async adminCreate(trnx: Transaction): Promise<void> {
+  async adminCreate(trnx: Transaction, userFrom, userTo): Promise<void> {
     try {
       if (trnx.type === "debit") {
         await TransactionModel.create({
           ...trnx,
+          userFrom: userFrom.userId,
+          userTo: userTo.userId,
           status: "confirmed",
         })
           .then((res) => {
@@ -87,6 +105,8 @@ export default class TransactionStore {
           ...trnx,
           walletId: trnx.to,
           to: trnx.walletId,
+          userFrom: userFrom.userId,
+          userTo: userTo.userId,
           type: "credit",
           status: "confirmed",
         })
@@ -99,6 +119,8 @@ export default class TransactionStore {
       } else {
         await TransactionModel.create({
           ...trnx,
+          userFrom: userFrom.userId,
+          userTo: userTo.userId,
         })
           .then((res) => {
             res.save();
@@ -111,6 +133,8 @@ export default class TransactionStore {
           walletId: trnx.to,
           to: trnx.walletId,
           type: "debit",
+          userFrom: userFrom.userId,
+          userTo: userTo.userId,
         })
           .then((res) => {
             res.save;
@@ -124,13 +148,14 @@ export default class TransactionStore {
     }
   }
 
-  async confirmTrx(trnx: Transaction): Promise<void> {
+  async confirmTrx(trnx: Transaction, userFrom, userTo): Promise<void> {
     try {
       await TransactionModel.updateOne(
         { _id: trnx.id },
         {
           status: "confirmed",
           to: trnx.to,
+          userTo: userTo.userId,
         }
       );
       await TransactionModel.create({
@@ -142,6 +167,8 @@ export default class TransactionStore {
         createdAt: trnx.createdAt,
         code: trnx.code,
         desc: trnx.desc,
+        userFrom: userFrom.userId,
+        userTo: userTo.userId,
       })
         .then((res) => {
           res.save;
@@ -154,13 +181,14 @@ export default class TransactionStore {
     }
   }
 
-  async pk(trnx: Transaction): Promise<void> {
+  async pk(trnx: Transaction, userFrom): Promise<void> {
     try {
       if (trnx.type === "debit") {
         await TransactionModel.create({
           ...trnx,
           to: "BlockSimulation",
           status: "confirmed",
+          userFrom: userFrom.userId,
         })
           .then((res) => {
             res.save();

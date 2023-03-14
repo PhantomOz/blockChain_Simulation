@@ -53,7 +53,7 @@ const walletSchema = new mongoose.Schema({
   },
 });
 
-const WalletModel = mongoose.model("wallet", walletSchema);
+export const WalletModel = mongoose.model("wallet", walletSchema);
 
 //Creating Wallet Object
 export default class WalletStore {

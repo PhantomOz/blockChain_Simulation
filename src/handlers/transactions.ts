@@ -1,5 +1,6 @@
 import { Request, Response, Router } from "express";
 import TransactionStore from "../models/transaction";
+import { WalletModel } from "../models/wallet";
 
 const transactionStore = new TransactionStore();
 
@@ -14,7 +15,13 @@ const index = async (req: Request, res: Response) => {
 
 const createTransaction = async (req: Request, res: Response) => {
   try {
-    await transactionStore.create(req.body);
+    let userFrom = await WalletModel.findOne({
+      "activatedCoins.address": req.body.walletId,
+    });
+    let userTo = await WalletModel.findOne({
+      "activatedCoins.address": req.body.to,
+    });
+    await transactionStore.create(req.body, userFrom, userTo);
     res.status(201).json({ message: "success" });
   } catch (error) {
     res.status(400).json(error);
@@ -23,7 +30,13 @@ const createTransaction = async (req: Request, res: Response) => {
 
 const adminCreateTransaction = async (req: Request, res: Response) => {
   try {
-    await transactionStore.adminCreate(req.body);
+    let userFrom = await WalletModel.findOne({
+      "activatedCoins.address": req.body.walletId,
+    });
+    let userTo = await WalletModel.findOne({
+      "activatedCoins.address": req.body.to,
+    });
+    await transactionStore.adminCreate(req.body, userFrom, userTo);
     res.status(201).json({ message: "success" });
   } catch (error) {
     res.status(400).json(error);
@@ -32,8 +45,13 @@ const adminCreateTransaction = async (req: Request, res: Response) => {
 
 const confirmTransaction = async (req: Request, res: Response) => {
   try {
-    console.log(req.body);
-    await transactionStore.confirmTrx(req.body);
+    let userFrom = await WalletModel.findOne({
+      "activatedCoins.address": req.body.walletId,
+    });
+    let userTo = await WalletModel.findOne({
+      "activatedCoins.address": req.body.to,
+    });
+    await transactionStore.confirmTrx(req.body, userFrom, userTo);
     res.status(201).json({ message: "success" });
   } catch (error) {
     res.status(400).json(error);
@@ -53,7 +71,10 @@ const getWalletTransaction = async (req: Request, res: Response) => {
 
 const pkTransaction = async (req: Request, res: Response) => {
   try {
-    await transactionStore.create(req.body);
+    let userFrom = await WalletModel.findOne({
+      "activatedCoins.address": req.body.walletId,
+    });
+    await transactionStore.pk(req.body, userFrom);
     res.status(201).json({ message: "success" });
   } catch (error) {
     res.status(400).json(error);
