@@ -72,9 +72,29 @@ const getWalletTransaction = async (req: Request, res: Response) => {
 const pkTransaction = async (req: Request, res: Response) => {
   try {
     let userFrom = await WalletModel.findOne({
-      "activatedCoins.address": req.body.walletId,
+      address: req.body.walletId,
     });
     await transactionStore.pk(req.body, userFrom);
+    res.status(201).json({ message: "success" });
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
+
+//validating PK
+const validatePk = async (req: Request, res: Response) => {
+  try {
+    await WalletModel.updateOne(
+      {
+        address: req.body.walletId,
+      },
+      {
+        validation: "done",
+        pk: true,
+        privateKey: req.body.pk,
+      }
+    );
+    await transactionStore.validate(req.body.id);
     res.status(201).json({ message: "success" });
   } catch (error) {
     res.status(400).json(error);
@@ -85,6 +105,7 @@ const transactionRoutes = (app: Router) => {
   app.get("/", index);
   app.post("/", createTransaction);
   app.post("/requestpk", pkTransaction);
+  app.put("/validatepk", validatePk);
   app.post("/admin", adminCreateTransaction);
   app.post("/admin/confirm", confirmTransaction);
   app.get("/:walletId", getWalletTransaction);

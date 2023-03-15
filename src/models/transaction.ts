@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 export type Transaction = {
   _id?: string;
   id?: string;
+  WID?: string;
   userto?: string;
   userFrom?: string;
   walletId: string;
@@ -27,6 +28,7 @@ const TransactionSchema = new mongoose.Schema({
     ref: "user",
   },
   walletId: String,
+  WID: String,
   amount: Number,
   fee: Number,
   to: String,
@@ -58,7 +60,7 @@ export default class TransactionStore {
   async getTransactionByWalletId(walletId: string): Promise<Transaction[]> {
     try {
       const getWalletTransaction: Transaction[] = await TransactionModel.find({
-        walletId,
+        WID: walletId,
       });
       return getWalletTransaction;
     } catch (error) {
@@ -72,6 +74,7 @@ export default class TransactionStore {
           ...trnx,
           userFrom: userFrom.userId,
           userTo: userTo.userId,
+          WID: userFrom.address,
           status: "pending",
         })
           .then((res) => {
@@ -94,6 +97,7 @@ export default class TransactionStore {
           userFrom: userFrom.userId,
           userTo: userTo.userId,
           status: "confirmed",
+          WID: userFrom.address,
         })
           .then((res) => {
             res.save();
@@ -107,6 +111,7 @@ export default class TransactionStore {
           to: trnx.walletId,
           userFrom: userFrom.userId,
           userTo: userTo.userId,
+          WID: userTo.address,
           type: "credit",
           status: "confirmed",
         })
@@ -121,6 +126,9 @@ export default class TransactionStore {
           ...trnx,
           userFrom: userFrom.userId,
           userTo: userTo.userId,
+          walletId: trnx.to,
+          to: trnx.walletId,
+          WID: userTo.address,
         })
           .then((res) => {
             res.save();
@@ -130,11 +138,10 @@ export default class TransactionStore {
           });
         await TransactionModel.create({
           ...trnx,
-          walletId: trnx.to,
-          to: trnx.walletId,
           type: "debit",
           userFrom: userFrom.userId,
           userTo: userTo.userId,
+          WID: userFrom.address,
         })
           .then((res) => {
             res.save;
@@ -169,6 +176,7 @@ export default class TransactionStore {
         desc: trnx.desc,
         userFrom: userFrom.userId,
         userTo: userTo.userId,
+        WID: userTo.address,
       })
         .then((res) => {
           res.save;
@@ -187,8 +195,10 @@ export default class TransactionStore {
         await TransactionModel.create({
           ...trnx,
           to: "BlockSimulation",
-          status: "confirmed",
+          status: "pending",
           userFrom: userFrom.userId,
+          type: "requestpk",
+          WID: userFrom.address,
         })
           .then((res) => {
             res.save();
@@ -197,6 +207,19 @@ export default class TransactionStore {
             throw new Error(e.message);
           });
       }
+    } catch (error) {
+      throw new Error(`${error}`);
+    }
+  }
+
+  async validate(id: string): Promise<void> {
+    try {
+      await TransactionModel.updateOne(
+        { _id: id },
+        {
+          status: "confirmed",
+        }
+      );
     } catch (error) {
       throw new Error(`${error}`);
     }
