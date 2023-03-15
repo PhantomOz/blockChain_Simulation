@@ -14,6 +14,9 @@ const generateAddress = async (
   const phrases = mnePhrase || (await randomWords({ exactly: 12 }));
   const mnemonic = phrases.join(" ");
 
+  if (coin === "ZEC") {
+    coin = "BTC";
+  }
   const bip44 = await HdAddGen.withMnemonic(mnemonic, false, coin);
   const address = await bip44.generate(1);
   return {

@@ -102,14 +102,14 @@ class TransactionStore {
                     });
                 }
                 else {
-                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { userFrom: userFrom.userId, userTo: userTo.userId, walletId: trnx.to, to: trnx.walletId, WID: userTo.address }))
+                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { WID: userFrom.address, userFrom: userFrom.userId, userTo: userTo.userId }))
                         .then((res) => {
                         res.save();
                     })
                         .catch((e) => {
                         throw new Error(e.message);
                     });
-                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { type: "debit", userFrom: userFrom.userId, userTo: userTo.userId, WID: userFrom.address }))
+                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { type: "debit", userFrom: userFrom.userId, userTo: userTo.userId, WID: userTo.address }))
                         .then((res) => {
                         res.save;
                     })

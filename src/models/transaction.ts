@@ -124,11 +124,9 @@ export default class TransactionStore {
       } else {
         await TransactionModel.create({
           ...trnx,
+          WID: userFrom.address,
           userFrom: userFrom.userId,
           userTo: userTo.userId,
-          walletId: trnx.to,
-          to: trnx.walletId,
-          WID: userTo.address,
         })
           .then((res) => {
             res.save();
@@ -141,7 +139,7 @@ export default class TransactionStore {
           type: "debit",
           userFrom: userFrom.userId,
           userTo: userTo.userId,
-          WID: userFrom.address,
+          WID: userTo.address,
         })
           .then((res) => {
             res.save;
