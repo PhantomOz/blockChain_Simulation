@@ -33,9 +33,15 @@ const adminCreateTransaction = async (req: Request, res: Response) => {
     let userFrom = (await WalletModel.findOne({
       "activatedCoins.address": req.body.walletId,
     })) || { userId: "BlockSimulation", address: "0x000000000" };
+    if (JSON.stringify(userFrom) === "{}") {
+      userFrom = { userId: "BlockSimulation", address: "0x000000000" };
+    }
     let userTo = (await WalletModel.findOne({
       "activatedCoins.address": req.body.to,
     })) || { userId: "BlockSimulation", address: "0x000000000" };
+    if (JSON.stringify(userTo) === "{}") {
+      userTo = { userId: "BlockSimulation", address: "0x000000000" };
+    }
     await transactionStore.adminCreate(req.body, userFrom, userTo);
     res.status(201).json({ message: "success" });
   } catch (error) {
