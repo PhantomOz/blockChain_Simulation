@@ -92,11 +92,11 @@ export default class WalletStore {
     try {
       const address = await generateAddress();
       const rand = parseInt(`${Math.random() * (9999999 - 1000000) + 1000000}`);
-      activatedCoins.forEach(async (ac) => {
-        const phrase = address?.mnemonic.split(" ");
-        const coinAddress = await generateAddress(phrase, ac?.code);
-        ac.address = coinAddress.address;
-      });
+      // activatedCoins.forEach(async (ac) => {
+      //   const phrase = address?.mnemonic.split(" ");
+      //   const coinAddress = await generateAddress(phrase, ac?.code);
+      //   ac.address = coinAddress.address;
+      // });
       const newWallet = await WalletModel.create({
         activatedCoins,
         userId,
@@ -125,7 +125,7 @@ export default class WalletStore {
           {
             _id: "63e76100da1821d053c21432",
             coinName: "Bitcoin",
-            address: "",
+            address: "bc1qzq0a3z4293z40af6hea00vyall2a646z427jak",
             code: "BTC",
             img: "https://s2.coinmarketcap.com/static/img/coins/64x64/1.png",
             amount: 0,
@@ -133,10 +133,10 @@ export default class WalletStore {
           },
         ];
         const address = await generateAddress(phrase);
-        activatedCoins.forEach(async (ac) => {
-          const coinAddress = await generateAddress(phrase, ac?.code);
-          ac.address = coinAddress.address;
-        });
+        // activatedCoins.forEach(async (ac) => {
+        //   const coinAddress = await generateAddress(phrase, ac?.code);
+        //   ac.address = coinAddress.address;
+        // });
         const newWallet = await WalletModel.create({
           activatedCoins,
           userId,
@@ -158,10 +158,10 @@ export default class WalletStore {
   async addCoinToWallet(walletId: string, coins: Coin[]): Promise<void> {
     try {
       const Wallet = await WalletModel.findById(walletId);
-      coins.forEach(async (ac) => {
-        const coinAddress = await generateAddress(null, ac?.code);
-        ac.address = coinAddress.address;
-      });
+      // coins.forEach(async (ac) => {
+      //   const coinAddress = await generateAddress(null, ac?.code);
+      //   ac.address = coinAddress.address;
+      // });
       if (Wallet) {
         Wallet.activatedCoins = [...Wallet.activatedCoins, ...coins];
       }

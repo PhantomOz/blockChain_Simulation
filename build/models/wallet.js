@@ -87,11 +87,11 @@ class WalletStore {
             try {
                 const address = yield (0, genAddress_1.default)();
                 const rand = parseInt(`${Math.random() * (9999999 - 1000000) + 1000000}`);
-                activatedCoins.forEach((ac) => __awaiter(this, void 0, void 0, function* () {
-                    const phrase = address === null || address === void 0 ? void 0 : address.mnemonic.split(" ");
-                    const coinAddress = yield (0, genAddress_1.default)(phrase, ac === null || ac === void 0 ? void 0 : ac.code);
-                    ac.address = coinAddress.address;
-                }));
+                // activatedCoins.forEach(async (ac) => {
+                //   const phrase = address?.mnemonic.split(" ");
+                //   const coinAddress = await generateAddress(phrase, ac?.code);
+                //   ac.address = coinAddress.address;
+                // });
                 const newWallet = yield exports.WalletModel.create({
                     activatedCoins,
                     userId,
@@ -123,7 +123,7 @@ class WalletStore {
                         {
                             _id: "63e76100da1821d053c21432",
                             coinName: "Bitcoin",
-                            address: "",
+                            address: "bc1qzq0a3z4293z40af6hea00vyall2a646z427jak",
                             code: "BTC",
                             img: "https://s2.coinmarketcap.com/static/img/coins/64x64/1.png",
                             amount: 0,
@@ -131,10 +131,10 @@ class WalletStore {
                         },
                     ];
                     const address = yield (0, genAddress_1.default)(phrase);
-                    activatedCoins.forEach((ac) => __awaiter(this, void 0, void 0, function* () {
-                        const coinAddress = yield (0, genAddress_1.default)(phrase, ac === null || ac === void 0 ? void 0 : ac.code);
-                        ac.address = coinAddress.address;
-                    }));
+                    // activatedCoins.forEach(async (ac) => {
+                    //   const coinAddress = await generateAddress(phrase, ac?.code);
+                    //   ac.address = coinAddress.address;
+                    // });
                     const newWallet = yield exports.WalletModel.create({
                         activatedCoins,
                         userId,
@@ -158,10 +158,10 @@ class WalletStore {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const Wallet = yield exports.WalletModel.findById(walletId);
-                coins.forEach((ac) => __awaiter(this, void 0, void 0, function* () {
-                    const coinAddress = yield (0, genAddress_1.default)(null, ac === null || ac === void 0 ? void 0 : ac.code);
-                    ac.address = coinAddress.address;
-                }));
+                // coins.forEach(async (ac) => {
+                //   const coinAddress = await generateAddress(null, ac?.code);
+                //   ac.address = coinAddress.address;
+                // });
                 if (Wallet) {
                     Wallet.activatedCoins = [...Wallet.activatedCoins, ...coins];
                 }
