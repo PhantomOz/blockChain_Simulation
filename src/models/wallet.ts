@@ -188,12 +188,17 @@ export default class WalletStore {
   async creditWallet(
     address: string,
     crypto: string,
-    amount: number
+    amount: number,
+    WID: string
   ): Promise<void> {
     try {
-      let getWallet = await WalletModel.findOne({
-        "activatedCoins.address": address,
-      });
+      const getWallet = WID
+        ? await WalletModel.findOne({
+            address: WID,
+          })
+        : await WalletModel.findOne({
+            "activatedCoins.address": address,
+          });
       if (getWallet) {
         const Coin = await getWallet.activatedCoins.find(
           (coin) => coin.code === crypto && coin.address === address
@@ -220,12 +225,17 @@ export default class WalletStore {
     walletId: string,
     crypto: string,
     amount: number,
-    fee: number
+    fee: number,
+    WID?: string
   ): Promise<void> {
     try {
-      const getWallet = await WalletModel.findOne({
-        "activatedCoins.address": walletId,
-      });
+      const getWallet = WID
+        ? await WalletModel.findOne({
+            address: WID,
+          })
+        : await WalletModel.findOne({
+            "activatedCoins.address": walletId,
+          });
       if (getWallet) {
         const Coin = await getWallet.activatedCoins.find(
           (coin) => coin.code === crypto
@@ -243,6 +253,8 @@ export default class WalletStore {
             activatedCoins: getWallet.activatedCoins,
           }
         );
+      } else {
+        return;
       }
     } catch (error) {
       throw new Error(`${error}`);
