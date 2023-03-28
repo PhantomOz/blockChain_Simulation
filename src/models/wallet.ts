@@ -189,7 +189,7 @@ export default class WalletStore {
     address: string,
     crypto: string,
     amount: number,
-    WID: string
+    WID?: string
   ): Promise<void> {
     try {
       const getWallet = WID

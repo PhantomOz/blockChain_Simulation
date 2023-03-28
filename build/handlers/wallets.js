@@ -78,7 +78,7 @@ const showWallet = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 //perform a transaction on wallet
 const trnxWallet = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        yield walletStore.debitWallet(req.body.sender, req.body.coin, req.body.amount, req.body.fee);
+        yield walletStore.debitWallet(req.body.sender, req.body.coin, req.body.amount, req.body.fee, req.body.WID);
         res.status(204).json({ message: "Success" });
     }
     catch (error) {
@@ -89,7 +89,7 @@ const trnxWallet = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 const adminTrnxWallet = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield walletStore.debitWallet(req.body.sender, req.body.coin, req.body.amount, req.body.fee);
-        yield walletStore.creditWallet(req.body.receiver, req.body.coin, req.body.amount);
+        yield walletStore.creditWallet(req.body.receiver, req.body.coin, req.body.amount, req.body.WID);
         res.status(204).json({ message: "Success" });
     }
     catch (error) {
@@ -109,7 +109,7 @@ const EditWallet = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 //Admin perform credit
 const credTrnxWallet = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        yield walletStore.creditWallet(req.body.receiver, req.body.coin, req.body.amount);
+        yield walletStore.creditWallet(req.body.receiver, req.body.coin, req.body.amount, req.body.WID);
         res.status(204).json({ message: "Success" });
     }
     catch (error) {

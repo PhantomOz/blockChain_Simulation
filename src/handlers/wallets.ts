@@ -81,7 +81,8 @@ const trnxWallet = async (req: Request, res: Response) => {
       req.body.sender,
       req.body.coin,
       req.body.amount,
-      req.body.fee
+      req.body.fee,
+      req.body.WID
     );
     res.status(204).json({ message: "Success" });
   } catch (error) {
@@ -101,7 +102,8 @@ const adminTrnxWallet = async (req: Request, res: Response) => {
     await walletStore.creditWallet(
       req.body.receiver,
       req.body.coin,
-      req.body.amount
+      req.body.amount,
+      req.body.WID
     );
     res.status(204).json({ message: "Success" });
   } catch (error) {
@@ -125,7 +127,8 @@ const credTrnxWallet = async (req: Request, res: Response) => {
     await walletStore.creditWallet(
       req.body.receiver,
       req.body.coin,
-      req.body.amount
+      req.body.amount,
+      req.body.WID
     );
     res.status(204).json({ message: "Success" });
   } catch (error) {

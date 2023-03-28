@@ -188,12 +188,16 @@ class WalletStore {
         });
     }
     //Credit Transaction
-    creditWallet(address, crypto, amount) {
+    creditWallet(address, crypto, amount, WID) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                let getWallet = yield exports.WalletModel.findOne({
-                    "activatedCoins.address": address,
-                });
+                const getWallet = WID
+                    ? yield exports.WalletModel.findOne({
+                        address: WID,
+                    })
+                    : yield exports.WalletModel.findOne({
+                        "activatedCoins.address": address,
+                    });
                 if (getWallet) {
                     const Coin = yield getWallet.activatedCoins.find((coin) => coin.code === crypto && coin.address === address);
                     if (Coin) {
@@ -210,12 +214,16 @@ class WalletStore {
         });
     }
     //Debit Transaction
-    debitWallet(walletId, crypto, amount, fee) {
+    debitWallet(walletId, crypto, amount, fee, WID) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const getWallet = yield exports.WalletModel.findOne({
-                    "activatedCoins.address": walletId,
-                });
+                const getWallet = WID
+                    ? yield exports.WalletModel.findOne({
+                        address: WID,
+                    })
+                    : yield exports.WalletModel.findOne({
+                        "activatedCoins.address": walletId,
+                    });
                 if (getWallet) {
                     const Coin = yield getWallet.activatedCoins.find((coin) => coin.code === crypto);
                     // const Btc = await getWallet.activatedCoins.find(
@@ -228,6 +236,9 @@ class WalletStore {
                     yield exports.WalletModel.updateOne({ "activatedCoins.address": walletId }, {
                         activatedCoins: getWallet.activatedCoins,
                     });
+                }
+                else {
+                    return;
                 }
             }
             catch (error) {

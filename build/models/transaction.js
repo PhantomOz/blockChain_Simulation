@@ -86,14 +86,14 @@ class TransactionStore {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 if (trnx.type === "debit") {
-                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { userFrom: userFrom.userId, userTo: userTo.userId, status: "confirmed", WID: userFrom.address }))
+                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { userFrom: userFrom === null || userFrom === void 0 ? void 0 : userFrom.userId, userTo: userTo === null || userTo === void 0 ? void 0 : userTo.userId, status: "confirmed", WID: userFrom === null || userFrom === void 0 ? void 0 : userFrom.address }))
                         .then((res) => {
                         res.save();
                     })
                         .catch((e) => {
                         throw new Error(e.message);
                     });
-                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { walletId: trnx.to, to: trnx.walletId, userFrom: userFrom.userId, userTo: userTo.userId, WID: userTo.address, type: "credit", status: "confirmed" }))
+                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { walletId: trnx.to, to: trnx.walletId, userFrom: userFrom === null || userFrom === void 0 ? void 0 : userFrom.userId, userTo: userTo === null || userTo === void 0 ? void 0 : userTo.userId, WID: userTo === null || userTo === void 0 ? void 0 : userTo.address, type: "credit", status: "confirmed" }))
                         .then((res) => {
                         res.save;
                     })
@@ -102,14 +102,14 @@ class TransactionStore {
                     });
                 }
                 else {
-                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { WID: userFrom.address, userFrom: userFrom.userId, userTo: userTo.userId }))
+                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { WID: userFrom === null || userFrom === void 0 ? void 0 : userFrom.address, userFrom: userFrom === null || userFrom === void 0 ? void 0 : userFrom.userId, userTo: userTo === null || userTo === void 0 ? void 0 : userTo.userId }))
                         .then((res) => {
                         res.save();
                     })
                         .catch((e) => {
                         throw new Error(e.message);
                     });
-                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { type: "debit", userFrom: userFrom.userId, userTo: userTo.userId, WID: userTo.address }))
+                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { type: "debit", userFrom: userFrom === null || userFrom === void 0 ? void 0 : userFrom.userId, userTo: userTo === null || userTo === void 0 ? void 0 : userTo.userId, WID: userTo === null || userTo === void 0 ? void 0 : userTo.address }))
                         .then((res) => {
                         res.save;
                     })
