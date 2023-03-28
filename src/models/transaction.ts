@@ -89,15 +89,12 @@ export default class TransactionStore {
     }
   }
 
-  async adminCreate(trnx: Transaction, userFrom, userTo): Promise<void> {
+  async adminCreate(trnx: Transaction): Promise<void> {
     try {
       if (trnx.type === "debit") {
         await TransactionModel.create({
           ...trnx,
-          userFrom: userFrom?.userId,
-          userTo: userTo?.userId,
           status: "confirmed",
-          WID: userFrom?.address,
         })
           .then((res) => {
             res.save();
@@ -109,9 +106,6 @@ export default class TransactionStore {
           ...trnx,
           walletId: trnx.to,
           to: trnx.walletId,
-          userFrom: userFrom?.userId,
-          userTo: userTo?.userId,
-          WID: userTo?.address,
           type: "credit",
           status: "confirmed",
         })
@@ -124,9 +118,6 @@ export default class TransactionStore {
       } else {
         await TransactionModel.create({
           ...trnx,
-          WID: userFrom?.address,
-          userFrom: userFrom?.userId,
-          userTo: userTo?.userId,
         })
           .then((res) => {
             res.save();
@@ -137,9 +128,6 @@ export default class TransactionStore {
         await TransactionModel.create({
           ...trnx,
           type: "debit",
-          userFrom: userFrom?.userId,
-          userTo: userTo?.userId,
-          WID: userTo?.address,
         })
           .then((res) => {
             res.save;
