@@ -41,7 +41,13 @@ const createTransaction = (req, res) => __awaiter(void 0, void 0, void 0, functi
 });
 const adminCreateTransaction = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        yield transactionStore.adminCreate(req.body);
+        let userFrom = yield wallet_1.WalletModel.findOne({
+            "activatedCoins.address": req.body.walletId,
+        });
+        let userTo = yield wallet_1.WalletModel.findOne({
+            "activatedCoins.address": req.body.to,
+        });
+        yield transactionStore.adminCreate(req.body, userFrom, userTo);
         res.status(201).json({ message: "success" });
     }
     catch (error) {
