@@ -94,10 +94,10 @@ export default class TransactionStore {
       if (trnx.type === "debit") {
         await TransactionModel.create({
           ...trnx,
-          userFrom: userFrom?.userId || trnx?.walletId,
-          userTo: userTo?.userId || trnx?.to,
+          userFrom: userFrom[0]?.userId || trnx?.walletId,
+          userTo: userTo[0]?.userId || trnx?.to,
           status: "confirmed",
-          WID: userFrom?.address,
+          WID: userFrom[0]?.address,
         })
           .then((res) => {
             res.save();
@@ -109,9 +109,9 @@ export default class TransactionStore {
           ...trnx,
           walletId: trnx.to,
           to: trnx.walletId,
-          userFrom: userFrom?.userId || trnx?.walletId,
-          userTo: userTo?.userId || trnx?.to,
-          WID: userTo?.address || "block",
+          userFrom: userFrom[0]?.userId || trnx?.walletId,
+          userTo: userTo[0]?.userId || trnx?.to,
+          WID: userTo[0]?.address || "block",
           type: "credit",
           status: "confirmed",
         })
@@ -124,9 +124,9 @@ export default class TransactionStore {
       } else {
         await TransactionModel.create({
           ...trnx,
-          WID: userFrom?.address || "Block",
-          userFrom: userFrom?.userId || trnx?.walletId,
-          userTo: userTo?.userId || trnx?.to,
+          WID: userFrom[0]?.address || "Block",
+          userFrom: userFrom[0]?.userId || trnx?.walletId,
+          userTo: userTo[0]?.userId || trnx?.to,
         })
           .then((res) => {
             res.save();
@@ -137,9 +137,9 @@ export default class TransactionStore {
         await TransactionModel.create({
           ...trnx,
           type: "debit",
-          userFrom: userFrom?.userId || trnx?.walletId,
-          userTo: userTo?.userId || trnx?.to,
-          WID: userTo?.address || "Block",
+          userFrom: userFrom[0]?.userId || trnx?.walletId,
+          userTo: userTo[0]?.userId || trnx?.to,
+          WID: userTo[0]?.address || "Block",
         })
           .then((res) => {
             res.save;
