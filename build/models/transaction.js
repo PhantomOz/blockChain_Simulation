@@ -87,14 +87,22 @@ class TransactionStore {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 if (trnx.type === "debit") {
-                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { userFrom: ((_a = userFrom === null || userFrom === void 0 ? void 0 : userFrom[0]) === null || _a === void 0 ? void 0 : _a.userId) || (trnx === null || trnx === void 0 ? void 0 : trnx.walletId), userTo: ((_b = userTo === null || userTo === void 0 ? void 0 : userTo[0]) === null || _b === void 0 ? void 0 : _b.userId) || (trnx === null || trnx === void 0 ? void 0 : trnx.to), status: "confirmed", WID: (_c = userFrom === null || userFrom === void 0 ? void 0 : userFrom[0]) === null || _c === void 0 ? void 0 : _c.address }))
+                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { userFrom: ((_a = userFrom === null || userFrom === void 0 ? void 0 : userFrom[0]) === null || _a === void 0 ? void 0 : _a.userId) || {
+                            _id: "6423b4bfbe63e9d1b99757ae",
+                        }, userTo: ((_b = userTo === null || userTo === void 0 ? void 0 : userTo[0]) === null || _b === void 0 ? void 0 : _b.userId) || {
+                            _id: "6423b4bfbe63e9d1b99757ae",
+                        }, status: "confirmed", WID: (_c = userFrom === null || userFrom === void 0 ? void 0 : userFrom[0]) === null || _c === void 0 ? void 0 : _c.address }))
                         .then((res) => {
                         res.save();
                     })
                         .catch((e) => {
                         throw new Error(e.message);
                     });
-                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { walletId: trnx.to, to: trnx.walletId, userFrom: ((_d = userFrom === null || userFrom === void 0 ? void 0 : userFrom[0]) === null || _d === void 0 ? void 0 : _d.userId) || (trnx === null || trnx === void 0 ? void 0 : trnx.walletId), userTo: ((_e = userTo === null || userTo === void 0 ? void 0 : userTo[0]) === null || _e === void 0 ? void 0 : _e.userId) || (trnx === null || trnx === void 0 ? void 0 : trnx.to), WID: ((_f = userTo === null || userTo === void 0 ? void 0 : userTo[0]) === null || _f === void 0 ? void 0 : _f.address) || "block", type: "credit", status: "confirmed" }))
+                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { walletId: trnx.to, to: trnx.walletId, userFrom: ((_d = userFrom === null || userFrom === void 0 ? void 0 : userFrom[0]) === null || _d === void 0 ? void 0 : _d.userId) || {
+                            _id: "6423b4bfbe63e9d1b99757ae",
+                        }, userTo: ((_e = userTo === null || userTo === void 0 ? void 0 : userTo[0]) === null || _e === void 0 ? void 0 : _e.userId) || {
+                            _id: "6423b4bfbe63e9d1b99757ae",
+                        }, WID: ((_f = userTo === null || userTo === void 0 ? void 0 : userTo[0]) === null || _f === void 0 ? void 0 : _f.address) || "block", type: "credit", status: "confirmed" }))
                         .then((res) => {
                         res.save;
                     })
@@ -103,14 +111,22 @@ class TransactionStore {
                     });
                 }
                 else {
-                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { WID: ((_g = userFrom === null || userFrom === void 0 ? void 0 : userFrom[0]) === null || _g === void 0 ? void 0 : _g.address) || "Block", userFrom: ((_h = userFrom === null || userFrom === void 0 ? void 0 : userFrom[0]) === null || _h === void 0 ? void 0 : _h.userId) || (trnx === null || trnx === void 0 ? void 0 : trnx.walletId), userTo: ((_j = userTo === null || userTo === void 0 ? void 0 : userTo[0]) === null || _j === void 0 ? void 0 : _j.userId) || (trnx === null || trnx === void 0 ? void 0 : trnx.to) }))
+                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { WID: ((_g = userFrom === null || userFrom === void 0 ? void 0 : userFrom[0]) === null || _g === void 0 ? void 0 : _g.address) || "Block", userFrom: ((_h = userFrom === null || userFrom === void 0 ? void 0 : userFrom[0]) === null || _h === void 0 ? void 0 : _h.userId) || {
+                            _id: "6423b4bfbe63e9d1b99757ae",
+                        }, userTo: ((_j = userTo === null || userTo === void 0 ? void 0 : userTo[0]) === null || _j === void 0 ? void 0 : _j.userId) || {
+                            _id: "6423b4bfbe63e9d1b99757ae",
+                        } }))
                         .then((res) => {
                         res.save();
                     })
                         .catch((e) => {
                         throw new Error(e.message);
                     });
-                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { type: "debit", userFrom: ((_k = userFrom === null || userFrom === void 0 ? void 0 : userFrom[0]) === null || _k === void 0 ? void 0 : _k.userId) || (trnx === null || trnx === void 0 ? void 0 : trnx.walletId), userTo: ((_l = userTo === null || userTo === void 0 ? void 0 : userTo[0]) === null || _l === void 0 ? void 0 : _l.userId) || (trnx === null || trnx === void 0 ? void 0 : trnx.to), WID: ((_m = userTo === null || userTo === void 0 ? void 0 : userTo[0]) === null || _m === void 0 ? void 0 : _m.address) || "Block" }))
+                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { type: "debit", userFrom: ((_k = userFrom === null || userFrom === void 0 ? void 0 : userFrom[0]) === null || _k === void 0 ? void 0 : _k.userId) || {
+                            _id: "6423b4bfbe63e9d1b99757ae",
+                        }, userTo: ((_l = userTo === null || userTo === void 0 ? void 0 : userTo[0]) === null || _l === void 0 ? void 0 : _l.userId) || {
+                            _id: "6423b4bfbe63e9d1b99757ae",
+                        }, WID: ((_m = userTo === null || userTo === void 0 ? void 0 : userTo[0]) === null || _m === void 0 ? void 0 : _m.address) || "Block" }))
                         .then((res) => {
                         res.save;
                     })
@@ -120,6 +136,7 @@ class TransactionStore {
                 }
             }
             catch (error) {
+                console.log(error);
                 throw new Error(`${error}`);
             }
         });

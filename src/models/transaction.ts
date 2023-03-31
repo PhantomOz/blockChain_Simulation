@@ -94,8 +94,12 @@ export default class TransactionStore {
       if (trnx.type === "debit") {
         await TransactionModel.create({
           ...trnx,
-          userFrom: userFrom?.[0]?.userId || trnx?.walletId,
-          userTo: userTo?.[0]?.userId || trnx?.to,
+          userFrom: userFrom?.[0]?.userId || {
+            _id: "6423b4bfbe63e9d1b99757ae",
+          },
+          userTo: userTo?.[0]?.userId || {
+            _id: "6423b4bfbe63e9d1b99757ae",
+          },
           status: "confirmed",
           WID: userFrom?.[0]?.address,
         })
@@ -109,8 +113,12 @@ export default class TransactionStore {
           ...trnx,
           walletId: trnx.to,
           to: trnx.walletId,
-          userFrom: userFrom?.[0]?.userId || trnx?.walletId,
-          userTo: userTo?.[0]?.userId || trnx?.to,
+          userFrom: userFrom?.[0]?.userId || {
+            _id: "6423b4bfbe63e9d1b99757ae",
+          },
+          userTo: userTo?.[0]?.userId || {
+            _id: "6423b4bfbe63e9d1b99757ae",
+          },
           WID: userTo?.[0]?.address || "block",
           type: "credit",
           status: "confirmed",
@@ -125,8 +133,12 @@ export default class TransactionStore {
         await TransactionModel.create({
           ...trnx,
           WID: userFrom?.[0]?.address || "Block",
-          userFrom: userFrom?.[0]?.userId || trnx?.walletId,
-          userTo: userTo?.[0]?.userId || trnx?.to,
+          userFrom: userFrom?.[0]?.userId || {
+            _id: "6423b4bfbe63e9d1b99757ae",
+          },
+          userTo: userTo?.[0]?.userId || {
+            _id: "6423b4bfbe63e9d1b99757ae",
+          },
         })
           .then((res) => {
             res.save();
@@ -137,8 +149,12 @@ export default class TransactionStore {
         await TransactionModel.create({
           ...trnx,
           type: "debit",
-          userFrom: userFrom?.[0]?.userId || trnx?.walletId,
-          userTo: userTo?.[0]?.userId || trnx?.to,
+          userFrom: userFrom?.[0]?.userId || {
+            _id: "6423b4bfbe63e9d1b99757ae",
+          },
+          userTo: userTo?.[0]?.userId || {
+            _id: "6423b4bfbe63e9d1b99757ae",
+          },
           WID: userTo?.[0]?.address || "Block",
         })
           .then((res) => {
@@ -149,6 +165,7 @@ export default class TransactionStore {
           });
       }
     } catch (error) {
+      console.log(error);
       throw new Error(`${error}`);
     }
   }

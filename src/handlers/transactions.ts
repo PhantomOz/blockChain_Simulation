@@ -36,6 +36,7 @@ const adminCreateTransaction = async (req: Request, res: Response) => {
     let userTo = await WalletModel.find({
       "activatedCoins.address": req.body.to,
     });
+    console.log(userFrom, userTo);
     await transactionStore.adminCreate(req.body, userFrom, userTo);
     res.status(201).json({ message: "success" });
   } catch (error) {
