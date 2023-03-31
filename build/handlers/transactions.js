@@ -47,7 +47,6 @@ const adminCreateTransaction = (req, res) => __awaiter(void 0, void 0, void 0, f
         let userTo = yield wallet_1.WalletModel.find({
             "activatedCoins.address": req.body.to,
         });
-        console.log(userFrom, userTo);
         yield transactionStore.adminCreate(req.body, userFrom, userTo);
         res.status(201).json({ message: "success" });
     }
