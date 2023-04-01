@@ -91,18 +91,18 @@ class TransactionStore {
                             _id: "6423b4bfbe63e9d1b99757ae",
                         }, userTo: ((_b = userTo === null || userTo === void 0 ? void 0 : userTo[0]) === null || _b === void 0 ? void 0 : _b.userId) || {
                             _id: "6423b4bfbe63e9d1b99757ae",
-                        }, status: "confirmed", WID: ((_c = userTo === null || userTo === void 0 ? void 0 : userTo[0]) === null || _c === void 0 ? void 0 : _c.address) || "BLock" }))
+                        }, status: "confirmed" }))
                         .then((res) => {
                         res.save();
                     })
                         .catch((e) => {
                         throw new Error(e.message);
                     });
-                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { walletId: trnx.to, to: trnx.walletId, userFrom: ((_d = userFrom === null || userFrom === void 0 ? void 0 : userFrom[0]) === null || _d === void 0 ? void 0 : _d.userId) || {
+                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { walletId: trnx.to, to: trnx.walletId, userFrom: ((_c = userFrom === null || userFrom === void 0 ? void 0 : userFrom[0]) === null || _c === void 0 ? void 0 : _c.userId) || {
                             _id: "6423b4bfbe63e9d1b99757ae",
-                        }, userTo: ((_e = userTo === null || userTo === void 0 ? void 0 : userTo[0]) === null || _e === void 0 ? void 0 : _e.userId) || {
+                        }, userTo: ((_d = userTo === null || userTo === void 0 ? void 0 : userTo[0]) === null || _d === void 0 ? void 0 : _d.userId) || {
                             _id: "6423b4bfbe63e9d1b99757ae",
-                        }, type: "credit", status: "confirmed" }))
+                        }, type: "credit", status: "confirmed", WID: ((_e = userTo === null || userTo === void 0 ? void 0 : userTo[0]) === null || _e === void 0 ? void 0 : _e.address) || "BLock" }))
                         .then((res) => {
                         res.save;
                     })
