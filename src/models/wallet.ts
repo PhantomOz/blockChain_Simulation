@@ -208,9 +208,9 @@ export default class WalletStore {
         if (Coin) {
           Coin.amount = Number(amount) + Number(Coin.amount);
         }
-        if (WID) {
+        if (WID && type === "credit") {
           await WalletModel.updateOne(
-            { address: address },
+            { address: WID },
             {
               activatedCoins: getWallet.activatedCoins,
             }
@@ -257,7 +257,7 @@ export default class WalletStore {
           Coin.amount -= amount;
           Coin.amount -= fee;
         }
-        if (WID) {
+        if (WID && type === "debit") {
           await WalletModel.updateOne(
             { address: WID },
             {

@@ -203,8 +203,8 @@ class WalletStore {
                     if (Coin) {
                         Coin.amount = Number(amount) + Number(Coin.amount);
                     }
-                    if (WID) {
-                        yield exports.WalletModel.updateOne({ address: address }, {
+                    if (WID && type === "credit") {
+                        yield exports.WalletModel.updateOne({ address: WID }, {
                             activatedCoins: getWallet.activatedCoins,
                         });
                     }
@@ -240,7 +240,7 @@ class WalletStore {
                         Coin.amount -= amount;
                         Coin.amount -= fee;
                     }
-                    if (WID) {
+                    if (WID && type === "debit") {
                         yield exports.WalletModel.updateOne({ address: WID }, {
                             activatedCoins: getWallet.activatedCoins,
                         });

@@ -98,7 +98,8 @@ const adminTrnxWallet = async (req: Request, res: Response) => {
       req.body.coin,
       req.body.amount,
       req.body.fee,
-      req.body.type
+      req.body.type,
+      req.body.WID
     );
     await walletStore.creditWallet(
       req.body.receiver,
