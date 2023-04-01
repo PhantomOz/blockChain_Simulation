@@ -131,6 +131,9 @@ export default class TransactionStore {
       } else {
         await TransactionModel.create({
           ...trnx,
+          status: "confirmed",
+          walletId: trnx.to,
+          to: trnx.walletId,
           userFrom: userFrom?.[0]?.userId || {
             _id: "6423b4bfbe63e9d1b99757ae",
           },
@@ -154,6 +157,7 @@ export default class TransactionStore {
           userTo: userTo?.[0]?.userId || {
             _id: "6423b4bfbe63e9d1b99757ae",
           },
+          status: "confirmed",
         })
           .then((res) => {
             res.save;

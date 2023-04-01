@@ -111,7 +111,7 @@ class TransactionStore {
                     });
                 }
                 else {
-                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { userFrom: ((_f = userFrom === null || userFrom === void 0 ? void 0 : userFrom[0]) === null || _f === void 0 ? void 0 : _f.userId) || {
+                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { status: "confirmed", walletId: trnx.to, to: trnx.walletId, userFrom: ((_f = userFrom === null || userFrom === void 0 ? void 0 : userFrom[0]) === null || _f === void 0 ? void 0 : _f.userId) || {
                             _id: "6423b4bfbe63e9d1b99757ae",
                         }, userTo: ((_g = userTo === null || userTo === void 0 ? void 0 : userTo[0]) === null || _g === void 0 ? void 0 : _g.userId) || {
                             _id: "6423b4bfbe63e9d1b99757ae",
@@ -126,7 +126,7 @@ class TransactionStore {
                             _id: "6423b4bfbe63e9d1b99757ae",
                         }, userTo: ((_k = userTo === null || userTo === void 0 ? void 0 : userTo[0]) === null || _k === void 0 ? void 0 : _k.userId) || {
                             _id: "6423b4bfbe63e9d1b99757ae",
-                        } }))
+                        }, status: "confirmed" }))
                         .then((res) => {
                         res.save;
                     })
