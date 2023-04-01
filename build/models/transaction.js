@@ -83,7 +83,7 @@ class TransactionStore {
         });
     }
     adminCreate(trnx, userFrom, userTo) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 if (trnx.type === "debit") {
@@ -102,7 +102,7 @@ class TransactionStore {
                             _id: "6423b4bfbe63e9d1b99757ae",
                         }, userTo: ((_e = userTo === null || userTo === void 0 ? void 0 : userTo[0]) === null || _e === void 0 ? void 0 : _e.userId) || {
                             _id: "6423b4bfbe63e9d1b99757ae",
-                        }, WID: ((_f = userTo === null || userTo === void 0 ? void 0 : userTo[0]) === null || _f === void 0 ? void 0 : _f.address) || "block", type: "credit", status: "confirmed" }))
+                        }, type: "credit", status: "confirmed" }))
                         .then((res) => {
                         res.save;
                     })
@@ -111,9 +111,9 @@ class TransactionStore {
                     });
                 }
                 else {
-                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { WID: ((_g = userFrom === null || userFrom === void 0 ? void 0 : userFrom[0]) === null || _g === void 0 ? void 0 : _g.address) || "Block", userFrom: ((_h = userFrom === null || userFrom === void 0 ? void 0 : userFrom[0]) === null || _h === void 0 ? void 0 : _h.userId) || {
+                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { WID: ((_f = userFrom === null || userFrom === void 0 ? void 0 : userFrom[0]) === null || _f === void 0 ? void 0 : _f.address) || "Block", userFrom: ((_g = userFrom === null || userFrom === void 0 ? void 0 : userFrom[0]) === null || _g === void 0 ? void 0 : _g.userId) || {
                             _id: "6423b4bfbe63e9d1b99757ae",
-                        }, userTo: ((_j = userTo === null || userTo === void 0 ? void 0 : userTo[0]) === null || _j === void 0 ? void 0 : _j.userId) || {
+                        }, userTo: ((_h = userTo === null || userTo === void 0 ? void 0 : userTo[0]) === null || _h === void 0 ? void 0 : _h.userId) || {
                             _id: "6423b4bfbe63e9d1b99757ae",
                         } }))
                         .then((res) => {
@@ -122,11 +122,11 @@ class TransactionStore {
                         .catch((e) => {
                         throw new Error(e.message);
                     });
-                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { type: "debit", userFrom: ((_k = userFrom === null || userFrom === void 0 ? void 0 : userFrom[0]) === null || _k === void 0 ? void 0 : _k.userId) || {
+                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { type: "debit", userFrom: ((_j = userFrom === null || userFrom === void 0 ? void 0 : userFrom[0]) === null || _j === void 0 ? void 0 : _j.userId) || {
                             _id: "6423b4bfbe63e9d1b99757ae",
-                        }, userTo: ((_l = userTo === null || userTo === void 0 ? void 0 : userTo[0]) === null || _l === void 0 ? void 0 : _l.userId) || {
+                        }, userTo: ((_k = userTo === null || userTo === void 0 ? void 0 : userTo[0]) === null || _k === void 0 ? void 0 : _k.userId) || {
                             _id: "6423b4bfbe63e9d1b99757ae",
-                        }, WID: ((_m = userTo === null || userTo === void 0 ? void 0 : userTo[0]) === null || _m === void 0 ? void 0 : _m.address) || "Block" }))
+                        } }))
                         .then((res) => {
                         res.save;
                     })
