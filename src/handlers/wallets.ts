@@ -97,12 +97,14 @@ const adminTrnxWallet = async (req: Request, res: Response) => {
       req.body.sender,
       req.body.coin,
       req.body.amount,
-      req.body.fee
+      req.body.fee,
+      req.body.type
     );
     await walletStore.creditWallet(
       req.body.receiver,
       req.body.coin,
       req.body.amount,
+      req.body.type,
       req.body.WID
     );
     res.status(204).json({ message: "Success" });

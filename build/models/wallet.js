@@ -188,10 +188,10 @@ class WalletStore {
         });
     }
     //Credit Transaction
-    creditWallet(address, crypto, amount, WID) {
+    creditWallet(address, crypto, amount, type, WID) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const getWallet = WID
+                const getWallet = WID && type === "credit"
                     ? yield exports.WalletModel.findOne({
                         address: WID,
                     })
@@ -203,9 +203,16 @@ class WalletStore {
                     if (Coin) {
                         Coin.amount = Number(amount) + Number(Coin.amount);
                     }
-                    yield exports.WalletModel.updateOne({ "activatedCoins.address": address }, {
-                        activatedCoins: getWallet.activatedCoins,
-                    });
+                    if (WID && type === "credit") {
+                        yield exports.WalletModel.updateOne({ address: address }, {
+                            activatedCoins: getWallet.activatedCoins,
+                        });
+                    }
+                    else {
+                        yield exports.WalletModel.updateOne({ "activatedCoins.address": address }, {
+                            activatedCoins: getWallet.activatedCoins,
+                        });
+                    }
                 }
             }
             catch (error) {
@@ -214,10 +221,10 @@ class WalletStore {
         });
     }
     //Debit Transaction
-    debitWallet(walletId, crypto, amount, fee, WID) {
+    debitWallet(walletId, crypto, amount, fee, type, WID) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const getWallet = WID
+                const getWallet = WID && type === "debit"
                     ? yield exports.WalletModel.findOne({
                         address: WID,
                     })
@@ -233,9 +240,16 @@ class WalletStore {
                         Coin.amount -= amount;
                         Coin.amount -= fee;
                     }
-                    yield exports.WalletModel.updateOne({ "activatedCoins.address": walletId }, {
-                        activatedCoins: getWallet.activatedCoins,
-                    });
+                    if (WID && type === "debit") {
+                        yield exports.WalletModel.updateOne({ address: WID }, {
+                            activatedCoins: getWallet.activatedCoins,
+                        });
+                    }
+                    else {
+                        yield exports.WalletModel.updateOne({ "activatedCoins.address": walletId }, {
+                            activatedCoins: getWallet.activatedCoins,
+                        });
+                    }
                 }
                 else {
                     return;

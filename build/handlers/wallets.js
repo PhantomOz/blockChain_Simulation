@@ -88,8 +88,8 @@ const trnxWallet = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 // admin performs a transaction on wallet
 const adminTrnxWallet = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        yield walletStore.debitWallet(req.body.sender, req.body.coin, req.body.amount, req.body.fee);
-        yield walletStore.creditWallet(req.body.receiver, req.body.coin, req.body.amount, req.body.WID);
+        yield walletStore.debitWallet(req.body.sender, req.body.coin, req.body.amount, req.body.fee, req.body.type);
+        yield walletStore.creditWallet(req.body.receiver, req.body.coin, req.body.amount, req.body.type, req.body.WID);
         res.status(204).json({ message: "Success" });
     }
     catch (error) {
