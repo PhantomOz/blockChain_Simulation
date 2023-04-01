@@ -101,6 +101,7 @@ export default class TransactionStore {
             _id: "6423b4bfbe63e9d1b99757ae",
           },
           status: "confirmed",
+          WID: userFrom?.[0]?.address || "BLock",
         })
           .then((res) => {
             res.save();
