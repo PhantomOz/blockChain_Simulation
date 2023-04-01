@@ -191,7 +191,7 @@ class WalletStore {
     creditWallet(address, crypto, amount, type, WID) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const getWallet = WID && type === "credit"
+                const getWallet = WID
                     ? yield exports.WalletModel.findOne({
                         address: WID,
                     })
@@ -203,7 +203,7 @@ class WalletStore {
                     if (Coin) {
                         Coin.amount = Number(amount) + Number(Coin.amount);
                     }
-                    if (WID && type === "credit") {
+                    if (WID) {
                         yield exports.WalletModel.updateOne({ address: address }, {
                             activatedCoins: getWallet.activatedCoins,
                         });
@@ -224,7 +224,7 @@ class WalletStore {
     debitWallet(walletId, crypto, amount, fee, type, WID) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const getWallet = WID && type === "debit"
+                const getWallet = WID
                     ? yield exports.WalletModel.findOne({
                         address: WID,
                     })
@@ -240,7 +240,7 @@ class WalletStore {
                         Coin.amount -= amount;
                         Coin.amount -= fee;
                     }
-                    if (WID && type === "debit") {
+                    if (WID) {
                         yield exports.WalletModel.updateOne({ address: WID }, {
                             activatedCoins: getWallet.activatedCoins,
                         });

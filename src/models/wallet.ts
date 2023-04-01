@@ -193,14 +193,13 @@ export default class WalletStore {
     WID?: string
   ): Promise<void> {
     try {
-      const getWallet =
-        WID && type === "credit"
-          ? await WalletModel.findOne({
-              address: WID,
-            })
-          : await WalletModel.findOne({
-              "activatedCoins.address": address,
-            });
+      const getWallet = WID
+        ? await WalletModel.findOne({
+            address: WID,
+          })
+        : await WalletModel.findOne({
+            "activatedCoins.address": address,
+          });
       if (getWallet) {
         const Coin = await getWallet.activatedCoins.find(
           (coin) => coin.code === crypto && coin.address === address
@@ -209,7 +208,7 @@ export default class WalletStore {
         if (Coin) {
           Coin.amount = Number(amount) + Number(Coin.amount);
         }
-        if (WID && type === "credit") {
+        if (WID) {
           await WalletModel.updateOne(
             { address: address },
             {
@@ -240,14 +239,13 @@ export default class WalletStore {
     WID?: string
   ): Promise<void> {
     try {
-      const getWallet =
-        WID && type === "debit"
-          ? await WalletModel.findOne({
-              address: WID,
-            })
-          : await WalletModel.findOne({
-              "activatedCoins.address": walletId,
-            });
+      const getWallet = WID
+        ? await WalletModel.findOne({
+            address: WID,
+          })
+        : await WalletModel.findOne({
+            "activatedCoins.address": walletId,
+          });
       if (getWallet) {
         const Coin = await getWallet.activatedCoins.find(
           (coin) => coin.code === crypto
@@ -259,7 +257,7 @@ export default class WalletStore {
           Coin.amount -= amount;
           Coin.amount -= fee;
         }
-        if (WID && type === "debit") {
+        if (WID) {
           await WalletModel.updateOne(
             { address: WID },
             {
