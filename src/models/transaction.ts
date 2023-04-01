@@ -101,7 +101,6 @@ export default class TransactionStore {
             _id: "6423b4bfbe63e9d1b99757ae",
           },
           status: "confirmed",
-          WID: userFrom?.[0]?.address,
         })
           .then((res) => {
             res.save();
@@ -131,7 +130,6 @@ export default class TransactionStore {
       } else {
         await TransactionModel.create({
           ...trnx,
-          WID: userFrom?.[0]?.address || "Block",
           userFrom: userFrom?.[0]?.userId || {
             _id: "6423b4bfbe63e9d1b99757ae",
           },
