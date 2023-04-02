@@ -31,7 +31,7 @@ const createTransaction = async (req: Request, res: Response) => {
 const adminCreateTransaction = async (req: Request, res: Response) => {
   try {
     let userFrom = await WalletModel.find({
-      "activatedCoins.address": req.body.walletId,
+      address: req.body.WID,
     });
     let userTo = await WalletModel.find({
       "activatedCoins.address": req.body.to,
