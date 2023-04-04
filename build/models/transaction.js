@@ -68,7 +68,9 @@ class TransactionStore {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 if (trnx.type === "debit") {
-                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { userFrom: userFrom.userId, userTo: userTo.userId, WID: userFrom.address, status: "pending" }))
+                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { userFrom: userFrom === null || userFrom === void 0 ? void 0 : userFrom.userId, userTo: (userTo === null || userTo === void 0 ? void 0 : userTo.userId) || {
+                            _id: "6423b4bfbe63e9d1b99757ae",
+                        }, WID: userFrom.address, status: "pending" }))
                         .then((res) => {
                         res.save();
                     })

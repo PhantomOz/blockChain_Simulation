@@ -72,8 +72,10 @@ export default class TransactionStore {
       if (trnx.type === "debit") {
         await TransactionModel.create({
           ...trnx,
-          userFrom: userFrom.userId,
-          userTo: userTo.userId,
+          userFrom: userFrom?.userId,
+          userTo: userTo?.userId || {
+            _id: "6423b4bfbe63e9d1b99757ae",
+          },
           WID: userFrom.address,
           status: "pending",
         })

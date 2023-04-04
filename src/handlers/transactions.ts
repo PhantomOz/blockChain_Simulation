@@ -16,7 +16,7 @@ const index = async (req: Request, res: Response) => {
 const createTransaction = async (req: Request, res: Response) => {
   try {
     let userFrom = await WalletModel.findOne({
-      "activatedCoins.address": req.body.walletId,
+      address: req.body.walletId,
     });
     let userTo = await WalletModel.findOne({
       "activatedCoins.address": req.body.to,
