@@ -181,7 +181,9 @@ export default class TransactionStore {
         {
           status: "confirmed",
           to: trnx.to,
-          userTo: userTo.userId,
+          userTo: userTo?.userId || {
+            _id: "6423b4bfbe63e9d1b99757ae",
+          },
         }
       );
       await TransactionModel.create({
@@ -194,8 +196,10 @@ export default class TransactionStore {
         code: trnx.code,
         desc: trnx.desc,
         userFrom: userFrom.userId,
-        userTo: userTo.userId,
-        WID: userTo.address,
+        userTo: userTo?.userId || {
+          _id: "6423b4bfbe63e9d1b99757ae",
+        },
+        WID: userTo?.address,
       })
         .then((res) => {
           res.save;

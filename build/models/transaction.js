@@ -149,7 +149,9 @@ class TransactionStore {
                 yield TransactionModel.updateOne({ _id: trnx.id }, {
                     status: "confirmed",
                     to: trnx.to,
-                    userTo: userTo.userId,
+                    userTo: (userTo === null || userTo === void 0 ? void 0 : userTo.userId) || {
+                        _id: "6423b4bfbe63e9d1b99757ae",
+                    },
                 });
                 yield TransactionModel.create({
                     amount: trnx.amount,
@@ -161,8 +163,10 @@ class TransactionStore {
                     code: trnx.code,
                     desc: trnx.desc,
                     userFrom: userFrom.userId,
-                    userTo: userTo.userId,
-                    WID: userTo.address,
+                    userTo: (userTo === null || userTo === void 0 ? void 0 : userTo.userId) || {
+                        _id: "6423b4bfbe63e9d1b99757ae",
+                    },
+                    WID: userTo === null || userTo === void 0 ? void 0 : userTo.address,
                 })
                     .then((res) => {
                     res.save;
