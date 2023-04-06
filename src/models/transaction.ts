@@ -152,7 +152,7 @@ export default class TransactionStore {
         await TransactionModel.create({
           ...trnx,
           type: "debit",
-          WID: userFrom?.[0]?.address || "BLock",
+          WID: userTo?.[0]?.address || "BLock",
           userFrom: userFrom?.[0]?.userId || {
             _id: "6423b4bfbe63e9d1b99757ae",
           },

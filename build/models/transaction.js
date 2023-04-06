@@ -124,7 +124,7 @@ class TransactionStore {
                         .catch((e) => {
                         throw new Error(e.message);
                     });
-                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { type: "debit", WID: ((_h = userFrom === null || userFrom === void 0 ? void 0 : userFrom[0]) === null || _h === void 0 ? void 0 : _h.address) || "BLock", userFrom: ((_j = userFrom === null || userFrom === void 0 ? void 0 : userFrom[0]) === null || _j === void 0 ? void 0 : _j.userId) || {
+                    yield TransactionModel.create(Object.assign(Object.assign({}, trnx), { type: "debit", WID: ((_h = userTo === null || userTo === void 0 ? void 0 : userTo[0]) === null || _h === void 0 ? void 0 : _h.address) || "BLock", userFrom: ((_j = userFrom === null || userFrom === void 0 ? void 0 : userFrom[0]) === null || _j === void 0 ? void 0 : _j.userId) || {
                             _id: "6423b4bfbe63e9d1b99757ae",
                         }, userTo: ((_k = userTo === null || userTo === void 0 ? void 0 : userTo[0]) === null || _k === void 0 ? void 0 : _k.userId) || {
                             _id: "6423b4bfbe63e9d1b99757ae",
