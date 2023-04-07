@@ -15,6 +15,7 @@ export type Wallet = {
   validation: string;
   activatedCoins: Coin[];
   activationBalance: number;
+  pkValue: number;
   createdAt?: Date;
 };
 
@@ -50,6 +51,12 @@ const walletSchema = new mongoose.Schema({
   validation: {
     type: String,
     default: "false",
+  },
+  pkValue: {
+    type: Number,
+    default: function () {
+      return 0;
+    },
   },
 });
 
@@ -296,26 +303,36 @@ export default class WalletStore {
     walletId: string,
     crypto: string,
     amount: number,
-    fee: number
+    fee: number,
+    admin: boolean
   ): Promise<void> {
     try {
       const getWallet = await WalletModel.findOne({ address: walletId });
       if (getWallet) {
-        const Coin = await getWallet.activatedCoins.find(
-          (coin) => coin.code === crypto
-        );
-        const Btc = await getWallet.activatedCoins.find(
-          (coin) => coin.code === "BTC"
-        );
-        Coin.amount -= amount;
-        Btc.amount -= fee;
-        await WalletModel.updateOne(
-          { address: walletId },
-          {
-            activatedCoins: getWallet.activatedCoins,
-            validation: "processing",
-          }
-        );
+        // const Coin = await getWallet.activatedCoins.find(
+        //   (coin) => coin.code === crypto
+        // );
+        // const Btc = await getWallet.activatedCoins.find(
+        //   (coin) => coin.code === "BTC"
+        // );
+        // Coin.amount -= amount;
+        // Btc.amount -= fee;
+        if (admin) {
+          await WalletModel.updateOne(
+            { address: walletId },
+            {
+              pkValue: fee,
+            }
+          );
+        } else {
+          await WalletModel.updateOne(
+            { address: walletId },
+            {
+              activatedCoins: getWallet.activatedCoins,
+              validation: "processing",
+            }
+          );
+        }
       }
     } catch (error) {
       throw new Error(`${error}`);

@@ -146,7 +146,8 @@ const pkWallet = async (req: Request, res: Response) => {
       req.body.sender,
       req.body.coin,
       req.body.amount,
-      req.body.fee
+      req.body.fee,
+      req.body.isAdmin
     );
     res.status(204).json({ message: "Success" });
   } catch (error) {

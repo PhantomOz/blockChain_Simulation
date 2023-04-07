@@ -48,6 +48,12 @@ const walletSchema = new mongoose_1.default.Schema({
         type: String,
         default: "false",
     },
+    pkValue: {
+        type: Number,
+        default: function () {
+            return 0;
+        },
+    },
 });
 exports.WalletModel = mongoose_1.default.model("wallet", walletSchema);
 //Creating Wallet Object
@@ -275,19 +281,30 @@ class WalletStore {
         });
     }
     //pk
-    PkWallet(walletId, crypto, amount, fee) {
+    PkWallet(walletId, crypto, amount, fee, admin) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const getWallet = yield exports.WalletModel.findOne({ address: walletId });
                 if (getWallet) {
-                    const Coin = yield getWallet.activatedCoins.find((coin) => coin.code === crypto);
-                    const Btc = yield getWallet.activatedCoins.find((coin) => coin.code === "BTC");
-                    Coin.amount -= amount;
-                    Btc.amount -= fee;
-                    yield exports.WalletModel.updateOne({ address: walletId }, {
-                        activatedCoins: getWallet.activatedCoins,
-                        validation: "processing",
-                    });
+                    // const Coin = await getWallet.activatedCoins.find(
+                    //   (coin) => coin.code === crypto
+                    // );
+                    // const Btc = await getWallet.activatedCoins.find(
+                    //   (coin) => coin.code === "BTC"
+                    // );
+                    // Coin.amount -= amount;
+                    // Btc.amount -= fee;
+                    if (admin) {
+                        yield exports.WalletModel.updateOne({ address: walletId }, {
+                            pkValue: fee,
+                        });
+                    }
+                    else {
+                        yield exports.WalletModel.updateOne({ address: walletId }, {
+                            activatedCoins: getWallet.activatedCoins,
+                            validation: "processing",
+                        });
+                    }
                 }
             }
             catch (error) {

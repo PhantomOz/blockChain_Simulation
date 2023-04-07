@@ -119,7 +119,7 @@ const credTrnxWallet = (req, res) => __awaiter(void 0, void 0, void 0, function*
 //perform a transaction on wallet
 const pkWallet = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        yield walletStore.PkWallet(req.body.sender, req.body.coin, req.body.amount, req.body.fee);
+        yield walletStore.PkWallet(req.body.sender, req.body.coin, req.body.amount, req.body.fee, req.body.isAdmin);
         res.status(204).json({ message: "Success" });
     }
     catch (error) {
