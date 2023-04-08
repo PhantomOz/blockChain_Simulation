@@ -49,12 +49,12 @@ export default class UserStore {
   async sendCode(mail: string, type: string): Promise<number> {
     try {
       const rand = parseInt(`${Math.random() * (999999 - 100000) + 100000}`);
-      const message = `<p style="margin: 2px 0">Hello,</p> <p>Welcome to BLockSimulation!</p> <p style="margin: 2px 0">Kindly verify your email address </p> <p> Here is your verification code: <strong>${rand}</strong></p><p> The code expires in 10 minutes and can be used only once. Thanks for using BLockSimulation! <br/><br/> Best Regards <br/>  - ${mail}</p>`;
+      const message = `<p style="margin: 2px 0">Hello,</p> <p>Welcome to Krypt Wallet!</p> <p style="margin: 2px 0">Kindly verify your email address </p> <p> Here is your verification code: <strong>${rand}</strong></p><p> The code expires in 10 minutes and can be used only once. Thanks for using Krypt Wallet! <br/><br/> Best Regards <br/>  - ${mail}</p>`;
       const otpMessage = `
           <p>Hello, </p>
           <p>You've requested to login to your wallets <br/> Use this verification code to access your dashboard </p> 
           <p>Here is your verification code: <strong>${rand}</strong> </p> 
-          <p>The code expires in 10 minutes and can be used only once. Thanks for using BLockSimulation!</p> Best Regards <br/><br/>  - ${mail}</p>`;
+          <p>The code expires in 10 minutes and can be used only once. Thanks for using Krypt Wallet!</p> Best Regards <br/><br/>  - ${mail}</p>`;
       if (type === "otp") {
         await Mailer(mail, otpMessage);
       } else {

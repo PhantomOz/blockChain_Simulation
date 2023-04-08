@@ -21,7 +21,7 @@ const Mailer = (email: string, message: string) => {
     html: `
             <body>
               <div>
-                <img style='background-color: white;' src='https://res.cloudinary.com/weird-d/image/upload/v1676296954/cover_sakqo1.png' height=150px width=100% alt='logo'/>
+                <img style='background-color: white;' src='https://res.cloudinary.com/dcpmainhy/image/upload/v1680959833/qvfcwq4bzdbfcginvqmc.png' height=150px width=100% alt='logo'/>
               </div>
               <div>
                 ${message}
